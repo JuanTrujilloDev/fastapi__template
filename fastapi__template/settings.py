@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     installed_apps: list = [
         "apps.common",
     ]
+    database_url: str = os.getenv("DATABASE_URL", "sqlite:///./test.db")
+    allow_origins: list = os.getenv("ALLOW_ORIGINS", ["*"])
 
 
 load_env()
