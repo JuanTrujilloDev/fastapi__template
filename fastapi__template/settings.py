@@ -36,6 +36,10 @@ class Settings(BaseSettings):
     database_name: str = os.getenv("DATABASE_NAME", "fastapi_template")
     database_user: str = os.getenv("DATABASE_USER", "fastapi_template")
     database_password: str = os.getenv("DATABASE_PASSWORD", "fastapi_template")
+    database_url = (
+        f"postgresql://{database_user}:{database_password}@"
+        f"{database_host}:{database_port}/{database_name}"
+    )
     allow_origins: List[str] = os.getenv("ALLOW_ORIGINS", ["*"])
 
 
