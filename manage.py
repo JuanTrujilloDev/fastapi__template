@@ -20,10 +20,10 @@ def main():
     try:
         module = importlib.import_module(f"fastapi__template.scripts.{command}")
         module.main()
-    except ModuleNotFoundError:
-        raise ValueError(f"Command {command} not found.")
-    except AttributeError:
-        raise ValueError(f"Command {command} does not have a main function.")
+    except ModuleNotFoundError as e:
+        raise ValueError(f"Command {command} not found.") from e
+    except AttributeError as e:
+        raise ValueError(f"Command {command} does not have a main function.") from e
 
 
 if __name__ == "__main__":
