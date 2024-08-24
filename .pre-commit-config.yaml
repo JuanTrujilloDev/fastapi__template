@@ -26,4 +26,4 @@ repos:
     rev: v0.6.2
     hooks:
       - id: ruff
-        args: ["check", "--config", "pyproject.toml", "--fix"]
+        args: ["check", "--fix", "--config", "pyproject.toml"]
