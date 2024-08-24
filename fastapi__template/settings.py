@@ -6,6 +6,7 @@ which is part of this source code package.
 """
 
 import os
+from typing import List
 
 from pydantic_settings import BaseSettings
 
@@ -15,6 +16,7 @@ from fastapi__template.load_env import load_env
 class Settings(BaseSettings):
     """Application settings."""
 
+    secret_key: str = os.getenv("SECRET_KEY")
     app_name: str = os.getenv("APP_NAME", "FastAPI Template")
     app_description: str = os.getenv("APP_DESCRIPTION", "FastAPI template application.")
     app_version: str = os.getenv("APP_VERSION", "0.1.0")
@@ -28,11 +30,9 @@ class Settings(BaseSettings):
     url_docs: str = os.getenv("URL_DOCS", "/docs")
     url_redocs: str = os.getenv("URL_REDOCS", "/redocs")
     terms_of_service: str = os.getenv("TERMS_OF_SERVICE", "http://localhost:8000")
-    installed_apps: list = [
-        "apps.common",
-    ]
+    installed_apps: list = ["apps.common", "apps.authentication"]
     database_url: str = os.getenv("DATABASE_URL", "sqlite:///./test.db")
-    allow_origins: list = os.getenv("ALLOW_ORIGINS", ["*"])
+    allow_origins: List[str] = os.getenv("ALLOW_ORIGINS", ["*"])
 
 
 load_env()
