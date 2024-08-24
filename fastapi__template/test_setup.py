@@ -12,8 +12,10 @@ from sqlmodel import SQLModel
 from fastapi__template.app import app
 from fastapi__template.settings import SETTINGS
 
-engine_url = f"postgresql://{SETTINGS.database_user}:{SETTINGS.database_password}"
-f"@{SETTINGS.database_host}:{SETTINGS.database_port}"
+engine_url = (
+    f"postgresql://{SETTINGS.database_user}:{SETTINGS.database_password}"
+    f"@{SETTINGS.database_host}:{SETTINGS.database_port}"
+)
 engine = sa.create_engine(engine_url)
 test_db_name = SETTINGS.database_name + "_test"
 with engine.connect() as connection:
