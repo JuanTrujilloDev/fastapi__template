@@ -31,7 +31,11 @@ class Settings(BaseSettings):
     url_redocs: str = os.getenv("URL_REDOCS", "/redocs")
     terms_of_service: str = os.getenv("TERMS_OF_SERVICE", "http://localhost:8000")
     installed_apps: list = ["apps.common", "apps.authentication"]
-    database_url: str = os.getenv("DATABASE_URL", "sqlite:///./test.db")
+    database_host: str = os.getenv("DATABASE_HOST", "localhost")
+    database_port: str = os.getenv("DATABASE_PORT", "5432")
+    database_name: str = os.getenv("DATABASE_NAME", "fastapi_template")
+    database_user: str = os.getenv("DATABASE_USER", "fastapi_template")
+    database_password: str = os.getenv("DATABASE_PASSWORD", "fastapi_template")
     allow_origins: List[str] = os.getenv("ALLOW_ORIGINS", ["*"])
 
 
