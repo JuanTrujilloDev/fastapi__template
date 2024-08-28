@@ -19,7 +19,14 @@ from fastapi__template.settings import SETTINGS
 
 def get_engine():
     """Get database engine."""
-    return create_engine(SETTINGS.database_url)
+    if SETTINGS.database_engine == "sqlite":
+        return create_engine(SETTINGS.database_url, echo=True)
+    elif SETTINGS.database_engine == "postgresql":
+        return create_engine(SETTINGS.database_url, echo=True, pool_pre_ping=True)
+    elif SETTINGS.database_engine == "mysql":
+        return create_engine(SETTINGS.database_url, echo=True, pool_pre_ping=True)
+    else:
+        raise ValueError("Invalid database engine specified in settings.")
 
 
 def find_models():

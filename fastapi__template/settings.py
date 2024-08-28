@@ -6,7 +6,7 @@ which is part of this source code package.
 """
 
 import os
-from typing import List
+from typing import List, ClassVar
 
 from pydantic_settings import BaseSettings
 
@@ -36,7 +36,8 @@ class Settings(BaseSettings):
     database_name: str = os.getenv("DATABASE_NAME", "fastapi_template")
     database_user: str = os.getenv("DATABASE_USER", "fastapi_template")
     database_password: str = os.getenv("DATABASE_PASSWORD", "fastapi_template")
-    database_url = (
+    database_engine: str = os.getenv("DATABASE_ENGINE", "postgresql")
+    database_url: ClassVar[str] = (
         f"postgresql://{database_user}:{database_password}@"
         f"{database_host}:{database_port}/{database_name}"
     )
