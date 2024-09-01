@@ -123,5 +123,8 @@ py_version = 312
 line_length = 90
 known_first_party = ["fastapi__template", "apps", "manage.py", "tests"]
 
+[tool.bandit]
+exclude_dirs = ["*/migrations/*", "*/alembic/*", "*/tests/*"]
+
 [tool.pytest.ini_options]
 testpaths = ["apps/*/tests/*", "tests"]
