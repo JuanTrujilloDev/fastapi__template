@@ -9,6 +9,7 @@ which is part of this source code package.
 """
 
 import secrets
+from datetime import datetime
 from typing import ClassVar, Optional
 
 from pydantic import model_validator
@@ -26,6 +27,7 @@ class APIKey(BaseModel, table=True):
     short_key: Optional[str]
     title: str
     description: str
+    expiry_date: Optional[datetime]
 
     class Config:
         """Pydantic config"""
@@ -33,6 +35,13 @@ class APIKey(BaseModel, table=True):
         orm_mode = True
         validate_assignment = True
         arbitrary_types_allowed = True
+
+    @property
+    def enabled(self):
+        """
+        Check if the API key is enabled to use.
+        """
+        return self.expiry_date > datetime.now() and self.is_active
 
     @model_validator(mode="before")
     def generate_key(self):
