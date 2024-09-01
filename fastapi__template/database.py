@@ -19,8 +19,14 @@ ALLOWED_ENGINES = {
     "mssql": (
         "mssql://{database_user}:{database_password}@{database_host}:{database_port}",
     ),
-    "postgresql+psycopg": "postgresql+psycopg://{database_user}:{database_password}@{database_host}:{database_port}",
-    "postgresql+psycopg2": "postgresql+psycopg2://{database_user}:{database_password}@{database_host}:{database_port}",
+    "postgresql+psycopg": (
+        "postgresql+psycopg://{database_user}:{database_password}"
+        "@{database_host}:{database_port}"
+    ),
+    "postgresql+psycopg2": (
+        "postgresql+psycopg2://{database_user}:{database_password}"
+        "@{database_host}:{database_port}"
+    ),
 }
 
 
