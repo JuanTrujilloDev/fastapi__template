@@ -165,3 +165,8 @@ cython_debug/
 
 #sqlite database
 *.db
+
+# Migration files
+migrations/versions/
+*/migrations/versions/
+/alembic/versions/
