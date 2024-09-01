@@ -26,8 +26,8 @@ def create_app() -> FastAPI:
             "email": SETTINGS.APP_AUTHOR_EMAIL,
         },
         debug=SETTINGS.DEBUG,
-        redoc_url=SETTINGS.URL_DOCS,
-        docs_url=SETTINGS.URL_REDOCS,
+        redoc_url=SETTINGS.URL_REDOCS,
+        docs_url=SETTINGS.URL_DOCS,
         openapi_url="/openapi.json",
     )
     fastapi_app.config = SETTINGS
