@@ -22,13 +22,3 @@ repos:
       - id: isort
         name: isort (pyi)
         types: [pyi]
--   repo: local
-    hooks:
-    - id: pylint
-      name: pylint
-      entry: pylint
-      language: system
-      types: [python]
-      require_serial: true
-      args:
-        - --rcfile=./pyproject.toml

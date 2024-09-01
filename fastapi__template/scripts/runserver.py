@@ -16,7 +16,7 @@ def main():
 
     uvicorn.run(
         "fastapi__template.app:app",
-        host=SETTINGS.host,
-        port=SETTINGS.port,
-        reload=SETTINGS.reload,
+        host=SETTINGS.HOST,
+        port=SETTINGS.PORT,
+        reload=SETTINGS.RELOAD,
     )

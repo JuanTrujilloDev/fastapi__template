@@ -17,27 +17,27 @@ from fastapi__template.settings import SETTINGS
 def create_app() -> FastAPI:
     """Create FastAPI application."""
     fastapi_app = FastAPI(
-        title=SETTINGS.app_name,
-        description=SETTINGS.app_description,
-        version=SETTINGS.app_version,
-        terms_of_service=SETTINGS.terms_of_service,
+        title=SETTINGS.APP_NAME,
+        description=SETTINGS.APP_DESCRIPTION,
+        version=SETTINGS.APP_TERMS_OF_SERVICE,
+        terms_of_service=SETTINGS.APP_TERMS_OF_SERVICE,
         contact={
-            "name": SETTINGS.app_author,
-            "email": SETTINGS.app_author_email,
+            "name": SETTINGS.APP_AUTHOR,
+            "email": SETTINGS.APP_AUTHOR_EMAIL,
         },
-        debug=SETTINGS.debug,
-        redoc_url=SETTINGS.url_redocs,
-        docs_url=SETTINGS.url_docs,
+        debug=SETTINGS.DEBUG,
+        redoc_url=SETTINGS.URL_DOCS,
+        docs_url=SETTINGS.URL_REDOCS,
         openapi_url="/openapi.json",
     )
     fastapi_app.config = SETTINGS
 
     # Add middlewares
-    fastapi_app.add_middleware(DBSessionMiddleware, db_url=SETTINGS.database_url)
+    fastapi_app.add_middleware(DBSessionMiddleware, db_url=SETTINGS.DATABASE_URL)
     fastapi_app.add_middleware(
         CORSMiddleware,
-        allow_origins=SETTINGS.allow_origins,
-        allow_credentials=True,
+        allow_origins=SETTINGS.ALLOW_ORIGINS,
+        allow_credentials=SETTINGS.ALLOW_CREDENTIALS,
     )
 
     return fastapi_app

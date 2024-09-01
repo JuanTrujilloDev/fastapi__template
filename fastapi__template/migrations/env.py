@@ -4,7 +4,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel
 
-from fastapi__template.database import find_models
+from fastapi__template.dependencies import find_models
 from fastapi__template.settings import SETTINGS
 
 # this is the Alembic Config object, which provides
@@ -16,7 +16,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", SETTINGS.database_url)
+config.set_main_option("sqlalchemy.url", SETTINGS.DATABASE_URL)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
