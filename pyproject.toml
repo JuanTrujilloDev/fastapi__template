@@ -126,5 +126,26 @@ known_first_party = ["fastapi__template", "apps", "manage.py", "tests"]
 [tool.bandit]
 exclude_dirs = ["*/migrations/*", "*/alembic/*", "*/tests/*"]
 
+[tool.pylint]
+max-line-length = 90
+
+[tool.pylint.format]
+max-line-length = 90
+
 [tool.pytest.ini_options]
 testpaths = ["apps/*/tests/*", "tests"]
+
+[tool.coverage.run]
+# Regexes for lines to exclude from consideration
+branch = true
+source = ["apps"]
+
+[tool.coverage.paths]
+source = ["*/apps/*"]
+
+[tool.coverage.report]
+fail_under = 95
+include_namespace_packages = true
+
+[tool.coverage.html]
+directory = "coverage_html_report"
