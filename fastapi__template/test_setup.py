@@ -84,4 +84,4 @@ class TestSetup:
     @staticmethod
     def teardown():
         """Teardown test environment."""
-        pass
+        return

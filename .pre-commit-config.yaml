@@ -22,3 +22,10 @@ repos:
       - id: isort
         name: isort (pyi)
         types: [pyi]
+-   repo: https://github.com/pylint-dev/pylint
+    rev: v3.2.7
+    hooks:
+    - id: pylint
+      args: ["--rcfile=./pyproject.toml"]
+      files: src
+      additional_dependencies: ["requests", "PyYAML"]
