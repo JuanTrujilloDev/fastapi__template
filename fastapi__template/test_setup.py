@@ -17,14 +17,22 @@ from fastapi__template.settings import SETTINGS
 
 TEST_DB_NAME = SETTINGS.DATABASE_NAME + "_test"
 EXISTS_COMMAND = {
-    "postgresql": f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'",  # nosec: B608
+    "postgresql": (
+        f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"  # nosec: B608
+    ),
     "mysql": (
         "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA "  # nosec: B608
         f"WHERE SCHEMA_NAME = '{TEST_DB_NAME}'"  # nosec: B608
     ),
-    "mssql": f"SELECT 1 FROM sys.databases WHERE name = '{TEST_DB_NAME}'",  # nosec: B608
-    "postgresql+psycopg": f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'",  # nosec: B608
-    "postgresql+psycopg2": f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'",  # nosec: B608
+    "mssql": (
+        f"SELECT 1 FROM sys.databases WHERE name = '{TEST_DB_NAME}'"  # nosec: B608
+    ),
+    "postgresql+psycopg": (
+        f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"  # nosec: B608
+    ),
+    "postgresql+psycopg2": (
+        f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"  # nosec: B608
+    ),
 }
 TEST_DB_ENGINE = get_engine(
     database_engine=SETTINGS.DATABASE_ENGINE_NAME,
