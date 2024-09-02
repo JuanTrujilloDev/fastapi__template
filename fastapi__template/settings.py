@@ -17,6 +17,8 @@ from fastapi__template.load_env import load_env
 class Settings(BaseSettings):
     """Application settings."""
 
+    # pylint: disable=invalid-envvar-default
+
     load_env()
 
     # Secret Key
