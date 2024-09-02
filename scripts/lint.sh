@@ -19,4 +19,4 @@ bandit -c pyproject.toml -r .
 
 # Run linter
 echo "Running linter..."
-pylint *.py --rcfile=./pyproject.toml
+pylint ./**/*.py --rcfile=./pyproject.toml
