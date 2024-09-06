@@ -11,7 +11,7 @@ which is part of this source code package.
 from datetime import date, datetime
 from typing import Optional
 
-from pydantic import computed_field, field_validator
+from pydantic import field_validator, model_validator
 
 from apps.authentication.methods.api_key_util_methods import hash_api_key
 from apps.common.models.base_model import BaseModel
@@ -44,8 +44,11 @@ class APIKey(BaseModel, table=True):
 
         return value
 
-    @computed_field(return_type=str)
-    def hash_and_store_key(self):
-        """Generate short key from the key"""
-        self.key = hash_api_key(self.key)
-        return self.key
+    @model_validator(mode="after")
+    def generate_short_key(self):
+        """Generate short key"""
+        if not self.key:
+            return self
+        self._set_skip_validation("key", hash_api_key(self.key))
+        self._set_skip_validation("short_key", self.key[:5])
+        return self
