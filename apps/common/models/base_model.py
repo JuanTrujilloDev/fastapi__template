@@ -13,6 +13,7 @@ from functools import partial
 from typing import Optional
 from uuid import UUID
 
+from pydantic import ConfigDict
 from sqlmodel import Field, SQLModel
 
 
@@ -20,7 +21,7 @@ class BaseModel(SQLModel, ABC):
     """Base model for all models"""
 
     id: Optional[UUID] = Field(
-        default=uuid.uuid4(), primary_key=True, allow_mutation=False
+        default_factory=uuid.uuid4, primary_key=True, allow_mutation=False
     )
     is_active: Optional[bool] = Field(default=True)
     created_at: datetime = Field(default=datetime.now(timezone.utc), nullable=False)
@@ -28,5 +29,4 @@ class BaseModel(SQLModel, ABC):
         default_factory=partial(datetime.now, tz=timezone.utc), nullable=False
     )
 
-    class Config:
-        validate_assignment = True
+    model_config = ConfigDict(from_attributes=True)

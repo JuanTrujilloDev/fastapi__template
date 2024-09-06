@@ -17,10 +17,6 @@ from fastapi__template.load_env import load_env
 class Settings(BaseSettings):
     """Application settings."""
 
-    # pylint: disable=invalid-envvar-default
-
-    load_env()
-
     # Secret Key
     SECRET_KEY: str = os.getenv("SECRET_KEY")
 
@@ -65,4 +61,5 @@ class Settings(BaseSettings):
     ALLOW_CREDENTIALS: bool = os.getenv("ALLOW_CREDENTIALS", True)
 
 
+load_env()
 SETTINGS = Settings()

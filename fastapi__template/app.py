@@ -10,7 +10,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_sqlalchemy import DBSessionMiddleware
 
-from fastapi__template.dependencies import install_apps
+from fastapi__template.dependencies import find_models, install_apps
 from fastapi__template.settings import SETTINGS
 
 
@@ -39,6 +39,9 @@ def create_app() -> FastAPI:
         allow_origins=SETTINGS.ALLOW_ORIGINS,
         allow_credentials=SETTINGS.ALLOW_CREDENTIALS,
     )
+
+    # Find all models
+    find_models()
 
     return fastapi_app
 

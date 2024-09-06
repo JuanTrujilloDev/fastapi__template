@@ -8,11 +8,10 @@ This file is subject to the terms and conditions defined in file 'LICENSE',
 which is part of this source code package.
 """
 
-import secrets
 from datetime import datetime
-from typing import ClassVar, Optional
+from typing import Optional
 
-from pydantic import model_validator
+from pydantic import field_validator, model_validator
 
 from apps.authentication.methods.api_key_util_methods import hash_api_key
 from apps.common.models.base_model import BaseModel
@@ -21,32 +20,36 @@ from apps.common.models.base_model import BaseModel
 class APIKey(BaseModel, table=True):
     """API Key model"""
 
-    HASH_METHOD: ClassVar = "sha256"
-
-    key: Optional[bytes]
+    key: str
     short_key: Optional[str]
     title: str
     description: str
     expiry_date: Optional[datetime]
-
-    class Config:
-        """Pydantic config"""
-
-        orm_mode = True
-        validate_assignment = True
-        arbitrary_types_allowed = True
 
     @property
     def enabled(self):
         """
         Check if the API key is enabled to use.
         """
+        if not self.expiry_date:
+            return self.is_active
         return self.expiry_date > datetime.now() and self.is_active
 
-    @model_validator(mode="before")
-    def generate_key(self):
-        """Generate key to be used as API key"""
-        random_key = secrets.token_urlsafe(32)
-        self.key = hash_api_key(random_key)
-        self.short_key = random_key[:5]
+    @field_validator("key", mode="before")
+    @classmethod
+    def validate_key(cls, value):
+        """Validate key"""
+        if not value:
+            raise ValueError("Key is required")
+
+        if not isinstance(value, str):
+            raise ValueError("Key must be a string")
+
+        return value
+
+    @model_validator(mode="after")
+    def hash_and_store_key(self):
+        """Generate short key from the key"""
+        self.key = hash_api_key(self.key)
+        print(type(self.key), "keASDASDy")
         return self

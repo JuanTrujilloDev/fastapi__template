@@ -36,6 +36,7 @@ fastapi-sqlalchemy = "^0.2.1"
 psycopg = "^3.2.1"
 psycopg-binary = "^3.2.1"
 psycopg2 = "^2.9.9"
+sqlalchemy = "^2.0.34"
 
 
 [build-system]

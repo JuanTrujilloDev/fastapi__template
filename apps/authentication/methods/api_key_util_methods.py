@@ -16,5 +16,6 @@ from fastapi__template.settings import SETTINGS
 def hash_api_key(api_key: str) -> str:
     """Hash API key."""
     base64_encoded_key = base64.b64encode(api_key)
-    hashed_key = hmac.new(SETTINGS.SECRET_KEY, base64_encoded_key, hashlib.sha256)
+    base64_encoded_secret_key = base64.b64encode(bytes(SETTINGS.SECRET_KEY, "utf-8"))
+    hashed_key = hmac.new(base64_encoded_secret_key, base64_encoded_key, hashlib.sha256)
     return hashed_key.hexdigest()
