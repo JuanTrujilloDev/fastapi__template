@@ -8,10 +8,10 @@ This file is subject to the terms and conditions defined in file 'LICENSE',
 which is part of this source code package.
 """
 
-from datetime import datetime
+from datetime import date, datetime
 from typing import Optional
 
-from pydantic import field_validator, model_validator
+from pydantic import computed_field, field_validator
 
 from apps.authentication.methods.api_key_util_methods import hash_api_key
 from apps.common.models.base_model import BaseModel
@@ -35,21 +35,17 @@ class APIKey(BaseModel, table=True):
             return self.is_active
         return self.expiry_date > datetime.now() and self.is_active
 
-    @field_validator("key", mode="before")
+    @field_validator("expiry_date")
     @classmethod
-    def validate_key(cls, value):
-        """Validate key"""
-        if not value:
-            raise ValueError("Key is required")
-
-        if not isinstance(value, str):
-            raise ValueError("Key must be a string")
+    def validate_expiry_date(cls, value: date):
+        """Validate expiry date"""
+        if value and value.date() < datetime.now().date():
+            raise ValueError("Expiry date should be greater than today.")
 
         return value
 
-    @model_validator(mode="after")
+    @computed_field(return_type=str)
     def hash_and_store_key(self):
         """Generate short key from the key"""
         self.key = hash_api_key(self.key)
-        print(type(self.key), "keASDASDy")
-        return self
+        return self.key

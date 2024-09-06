@@ -10,7 +10,7 @@ import uuid
 from abc import ABC
 from datetime import datetime, timezone
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 from uuid import UUID
 
 from pydantic import ConfigDict
@@ -29,4 +29,15 @@ class BaseModel(SQLModel, ABC):
         default_factory=partial(datetime.now, tz=timezone.utc), nullable=False
     )
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(
+        from_attributes=True, validate_default=True, validate_assignment=True
+    )
+
+    def _set_skip_validation(self, name: str, value: Any) -> None:
+        """Workaround to be able to set fields without validation."""
+        attr = getattr(self.__class__, name, None)
+        if isinstance(attr, property):
+            attr.__set__(self, value)
+        else:
+            self.__dict__[name] = value
+            self.__pydantic_fields_set__.add(name)
