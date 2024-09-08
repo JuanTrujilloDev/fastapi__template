@@ -14,9 +14,6 @@ class ValidationSQLModelMeta(SQLModelMetaclass):
 
     def __call__(cls, *args, **kwargs):
         """Call method for SQLModel validation"""
-        if not hasattr(cls, "model_config"):
-            raise ValueError("model_config is not defined in the model.")
-
         cls.model_config["table"] = False
         model = super().__call__(*args, **kwargs)
         cls.model_config["table"] = True
