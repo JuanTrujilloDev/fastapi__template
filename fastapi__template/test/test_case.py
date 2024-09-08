@@ -8,18 +8,13 @@ which is part of this source code package.
 import unittest
 from unittest.mock import Mock
 
-import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 
 from fastapi__template.app import app
 from fastapi__template.dependencies import find_models
-from fastapi__template.test.test_setup import (
-    drop_test_database,
-    engine,
-    prepare_test_database,
-)
+from fastapi__template.test.test_setup import engine
 
 
 class TestCase(unittest.TestCase):
@@ -28,13 +23,6 @@ class TestCase(unittest.TestCase):
 
     This class is intended to be used as a base class for all test cases.
     """
-
-    @pytest.fixture(scope="class", autouse=True)
-    def create_test_database(self):
-        """Create test database."""
-        prepare_test_database()
-        yield
-        drop_test_database()
 
     def setUp(self):
         """Setup test environment."""
