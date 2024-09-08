@@ -9,23 +9,23 @@ which is part of this source code package.
 """
 
 from datetime import date, datetime
+from typing import Optional
 
-from tortoise import fields
+from pydantic import field_validator, model_validator
+from sqlmodel import Field
 
 from apps.authentication.methods.api_key_util_methods import hash_api_key
 from apps.common.models.base_model import BaseModel
 
 
-class APIKey(BaseModel):
+class APIKey(BaseModel, table=True):
     """API Key model"""
 
-    key: bytes = fields.BinaryField(null=False, unique=True, description="API key")
-    short_key: str = fields.CharField(
-        max_length=5, null=True, unique=True, description="Short key"
-    )
-    title: str = fields.CharField(max_length=255, null=False, description="Title")
-    description: str = fields.TextField(null=True, description="Description")
-    expiry_date: date = fields.DatetimeField(null=True, description="Expiry date")
+    key: str = Field(..., description="API Key")
+    short_key: Optional[str] = Field(None, description="Short key")
+    title: str = Field(..., description="Title")
+    description: str = Field(None, description="Description")
+    expiry_date: Optional[datetime] = Field(None, description="Expiry date")
 
     @property
     def enabled(self):
@@ -36,13 +36,21 @@ class APIKey(BaseModel):
             return self.is_active
         return self.expiry_date > datetime.now() and self.is_active
 
-    async def clean_expiry_date(self):
+    @field_validator("expiry_date", mode="after")
+    @classmethod
+    def validate_expiry_date(cls, value: date):
         """Validate expiry date"""
-        if self.expiry_date and self.expiry_date() < datetime.now().date():
+        if value and value.date() < datetime.now().date():
             raise ValueError("Expiry date should be greater than today.")
 
-    async def save(self, *args, **kwargs):
-        """Save the model"""
+        return value
+
+    @model_validator(mode="after")
+    def generate_short_key(self):
+        """Generate short key"""
+        if not self.key or not isinstance(self.key, str):
+            return self
+
         self.short_key = self.key[:5]
         self.key = hash_api_key(self.key)
-        super().save(*args, **kwargs)
+        return self

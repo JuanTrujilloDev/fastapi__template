@@ -32,7 +32,6 @@ class TestCase(unittest.TestCase):
     @pytest.fixture(scope="class", autouse=True)
     def create_test_database(self):
         """Create test database."""
-        print("USING")
         prepare_test_database()
         yield
         drop_test_database()
@@ -44,7 +43,7 @@ class TestCase(unittest.TestCase):
         self.base_model = SQLModel
         find_models()
         self.engine = engine
-        self.session = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)()
+        self.session = sessionmaker(bind=self.engine)()
         self.db = Mock()
         self.db.session = self.session
         with self.engine.begin() as connection:

@@ -73,7 +73,6 @@ def drop_test_database():
             )
         )
     ).fetchone()
-    print("DB EXISTS", exists)
     if exists:
         connection.execute(sa.text(f"DROP DATABASE {TEST_DB_NAME} WITH (FORCE)"))
 

@@ -2,6 +2,8 @@ import secrets
 from datetime import datetime, timedelta
 from unittest import mock
 
+from pydantic_core import ValidationError
+
 from apps.authentication.models.api_key import APIKey
 from fastapi__template.test import TestCase
 
@@ -9,8 +11,9 @@ from fastapi__template.test import TestCase
 class TestApiKeyModel(TestCase):
     def setUp(self):
         super().setUp()
+        self.secret_key = secrets.token_urlsafe(32)
         self.api_key = APIKey(
-            title="test_key", description="Test Key", key=secrets.token_urlsafe(32)
+            title="test_key", description="Test Key", key=self.secret_key
         )
         self.past_date = datetime.now() - timedelta(days=1)
         with mock.patch(
@@ -70,18 +73,35 @@ class TestApiKeyModel(TestCase):
         )
 
     def test_create_api_key_without_key_raises_error(self):
-        api_key_without_key = APIKey(title="new_key", description="New Key")
-        assert api_key_without_key.key is None
+        with self.assertRaises(ValidationError) as e:
+            APIKey(title="new_key", description="New Key")
+        self.assertEqual(str(e.exception.errors()[0]["msg"]), "Field required")
 
     def test_create_api_key_with_non_string_key_raises_error(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError) as e:
             APIKey(title="new_key", description="New Key", key=123)
+        self.assertEqual(
+            str(e.exception.errors()[0]["msg"]), "Input should be a valid string"
+        )
 
     def test_create_api_key_with_past_expiry_date_raises_error(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError) as e:
             APIKey(
                 title="new_key",
                 description="New Key",
                 key=secrets.token_urlsafe(32),
                 expiry_date=self.past_date,
             )
+        self.assertEqual(
+            str(e.exception.errors()[0]["msg"]),
+            "Value error, Expiry date should be greater than today.",
+        )
+
+    def test_create_api_key_with_manual_key_returns_correct_short_key(self):
+        api_key = APIKey(title="new_key32", description="New Key", key="testing key")
+        self.db.session.add(api_key)
+        self.db.session.commit()
+        api_key = (
+            self.db.session.query(APIKey).filter(APIKey.title == "new_key32").first()
+        )
+        self.assertEqual(api_key.short_key, "testi")
