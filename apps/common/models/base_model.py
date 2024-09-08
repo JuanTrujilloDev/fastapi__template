@@ -14,7 +14,7 @@ from typing import Optional
 from pydantic import ConfigDict
 from sqlmodel import Field, SQLModel
 
-from apps.common.models.validation_sql_model import ValidationSQLModelMeta
+from apps.common.models.validation_sqlmodel import ValidationSQLModelMeta
 
 
 class BaseModel(SQLModel, metaclass=ValidationSQLModelMeta):
