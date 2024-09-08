@@ -10,6 +10,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_sqlalchemy import DBSessionMiddleware
 
+from apps.admin.methods.func_util_methods import register_admin_views
 from fastapi__template.dependencies import find_models, install_apps
 from fastapi__template.settings import SETTINGS
 
@@ -48,3 +49,4 @@ def create_app() -> FastAPI:
 
 app = create_app()
 install_apps(app)
+register_admin_views(app)
