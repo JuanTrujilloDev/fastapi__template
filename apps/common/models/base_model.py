@@ -14,8 +14,10 @@ from typing import Optional
 from pydantic import ConfigDict
 from sqlmodel import Field, SQLModel
 
+from apps.common.models.validation_sql_model import ValidationSQLModelMeta
 
-class BaseModel(SQLModel):
+
+class BaseModel(SQLModel, metaclass=ValidationSQLModelMeta):
     """Base model for all models"""
 
     id: Optional[uuid.UUID] = Field(
@@ -28,8 +30,3 @@ class BaseModel(SQLModel):
     )
 
     model_config = ConfigDict(from_attributes=True)
-
-    def __init__(self, **kwargs):
-        self.model_config["table"] = False
-        super().__init__(**kwargs)
-        self.model_config["table"] = True
