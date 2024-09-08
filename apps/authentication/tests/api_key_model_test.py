@@ -5,10 +5,10 @@ from unittest import mock
 from pydantic_core import ValidationError
 
 from apps.authentication.models.api_key import APIKey
-from fastapi__template.test import TestCase
+from fastapi__template.test import TransactionTestCase
 
 
-class TestApiKeyModel(TestCase):
+class TestApiKeyModel(TransactionTestCase):
     def setUp(self):
         super().setUp()
         self.secret_key = secrets.token_urlsafe(32)

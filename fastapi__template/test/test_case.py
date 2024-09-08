@@ -19,9 +19,24 @@ from fastapi__template.test.test_setup import engine
 
 class TestCase(unittest.TestCase):
     """
-    Base test case class.
+    Base test case.
+    This test can be used for tests that do not require a database connection.
+    """
 
-    This class is intended to be used as a base class for all test cases.
+    def setUp(self):
+        """Setup test environment."""
+        self.app = app
+        self.client = TestClient(self.app)
+
+    def tearDown(self):
+        """Teardown test environment."""
+        pass
+
+
+class TransactionTestCase(unittest.TestCase):
+    """
+    Transactional test case.
+    This test can be used for tests that require a database connection.
     """
 
     def setUp(self):
