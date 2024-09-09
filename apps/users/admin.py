@@ -8,7 +8,7 @@ which is part of this source code package.
 
 from sqladmin import ModelView
 
-from apps.admin.models.user import User
+from apps.users.models.user import User
 
 
 class UserAdmin(ModelView, model=User):
