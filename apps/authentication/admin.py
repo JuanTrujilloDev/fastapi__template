@@ -6,12 +6,11 @@ This file is subject to the terms and conditions defined in file 'LICENSE',
 which is part of this source code package.
 """
 
-from sqladmin import ModelView
-
 from apps.authentication.models.api_key import APIKey
+from fastapi__template.admin.base_admin_views import BaseModelAdminView
 
 
-class ApiKeyAdmin(ModelView, model=APIKey):
+class ApiKeyAdmin(BaseModelAdminView, model=APIKey):
     """Model view for APIKey model"""
 
     column_list = [APIKey.id, APIKey.title]
