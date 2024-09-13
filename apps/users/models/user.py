@@ -1,9 +1,21 @@
+"""
+
+User Model
+
+This model is used to store the Users.
+
+This file is subject to the terms and conditions defined in file 'LICENSE',
+which is part of this source code package.
+"""
+
 from sqlmodel import Field
 
 from apps.common.models.base_model import BaseModel
 
 
 class User(BaseModel, table=True):
+    """User model"""
+
     __tablename__ = "users"
 
     name: str = Field(..., description="Name of the user")

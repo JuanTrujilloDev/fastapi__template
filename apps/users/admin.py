@@ -12,11 +12,6 @@ from apps.users.models.user import User
 
 
 class UserAdmin(ModelView, model=User):
-    """
-    Admin view for managing User model.
-
-    Attributes:
-        column_list (list): List of columns to display in the admin view.
-    """
+    """Model view for User Admin model"""
 
     column_list = [User.id, User.name]

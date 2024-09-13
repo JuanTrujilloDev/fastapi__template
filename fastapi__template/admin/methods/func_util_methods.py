@@ -1,3 +1,13 @@
+"""
+
+Admin module
+
+This file is used to register the admin views.
+
+This file is subject to the terms and conditions defined in file 'LICENSE',
+which is part of this source code package.
+"""
+
 import sqlalchemy as sa
 from fastapi import FastAPI
 from sqladmin import Admin
