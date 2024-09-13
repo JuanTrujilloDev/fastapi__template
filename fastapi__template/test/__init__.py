@@ -5,8 +5,9 @@ This file is subject to the terms and conditions defined in file 'LICENSE',
 which is part of this source code package.
 """
 
-from fastapi__template.test.test_case import TestCase
+from fastapi__template.test.test_case import TestCase, TransactionTestCase
 
 __all__ = [
+    "TransactionTestCase",
     "TestCase",
 ]

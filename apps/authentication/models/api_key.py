@@ -46,11 +46,8 @@ class APIKey(BaseModel, table=True):
         return value
 
     @model_validator(mode="after")
-    def generate_short_key(self):
+    def generate_hash_key(self):
         """Generate short key"""
-        if not self.key or not isinstance(self.key, str):
-            return self
-
         self.short_key = self.key[:5]
         self.key = hash_api_key(self.key)
         return self
