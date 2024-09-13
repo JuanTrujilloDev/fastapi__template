@@ -7,9 +7,11 @@ which is part of this source code package.
 """
 
 from apps.authentication.models.api_key import APIKey
+from fastapi__template.admin import register
 from fastapi__template.admin.base_admin_views import BaseModelAdminView
 
 
+@register()
 class ApiKeyAdmin(BaseModelAdminView, model=APIKey):
     """Model view for APIKey model"""
 

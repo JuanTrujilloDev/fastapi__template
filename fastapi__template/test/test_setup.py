@@ -10,12 +10,13 @@ import os
 
 import sqlalchemy as sa
 
-from fastapi__template.test.test_constants import TEST_DB_NAME, DBExistsCommand, engine
+from fastapi__template.dependencies import DEFAULT_ENGINE
+from fastapi__template.test.test_constants import TEST_DB_NAME, DBExistsCommand
 
 
 def prepare_test_database():
     """Prepare test database."""
-    connection = engine.connect()
+    connection = DEFAULT_ENGINE.connect()
     connection.execution_options(isolation_level="AUTOCOMMIT")
     exists = connection.execute(
         sa.text(
@@ -33,7 +34,7 @@ def prepare_test_database():
 
 def drop_test_database():
     """Drop test database."""
-    connection = engine.connect()
+    connection = DEFAULT_ENGINE.connect()
     connection.execution_options(isolation_level="AUTOCOMMIT")
     exists = connection.execute(
         sa.text(

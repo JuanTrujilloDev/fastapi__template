@@ -9,8 +9,6 @@ which is part of this source code package.
 
 from enum import StrEnum
 
-import sqlalchemy as sa
-
 from fastapi__template.database import get_engine
 from fastapi__template.settings import SETTINGS
 
@@ -58,5 +56,3 @@ TEST_DB_ENGINE = get_engine(
     database_host=SETTINGS.DATABASE_HOST,
     database_port=SETTINGS.DATABASE_PORT,
 )
-
-engine = sa.create_engine(TEST_DB_ENGINE, poolclass=sa.StaticPool)
