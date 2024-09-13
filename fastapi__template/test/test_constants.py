@@ -30,14 +30,14 @@ class DBExistsCommand(StrEnum):
         postgresql_psycopg2: PostgreSQL database exists command for psycopg
     """
 
-    postgresql = f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"
-    mysql = (
+    POSTGRESQL = f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"
+    MYSQL = (
         "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA "
         f"WHERE SCHEMA_NAME = '{TEST_DB_NAME}'"
     )
-    mssql = f"SELECT 1 FROM sys.databases WHERE name = '{TEST_DB_NAME}'"
-    postgresql_psycopg = f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"
-    postgresql_psycopg2 = f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"
+    MSSQL = f"SELECT 1 FROM sys.databases WHERE name = '{TEST_DB_NAME}'"
+    POSTGRESQL_PSYCOPG = f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"
+    POSTGRESQL_PSYCOPG2 = f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"
 
     @classmethod
     def get_command(cls, database_name: str) -> str:
@@ -45,7 +45,7 @@ class DBExistsCommand(StrEnum):
         Get database exists command.
         """
         try:
-            return cls[database_name].value
+            return cls[database_name.upper()].value
         except (KeyError, AttributeError) as error:
             raise ValueError(f"Invalid database engine {database_name}") from error
 
