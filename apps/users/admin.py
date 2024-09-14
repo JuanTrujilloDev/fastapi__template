@@ -7,8 +7,8 @@ which is part of this source code package.
 """
 
 from apps.users.models.user import User
-from fastapi__template.admin import register
 from fastapi__template.admin.base_admin_views import BaseModelAdminView
+from fastapi__template.admin.site import register
 
 
 @register()
