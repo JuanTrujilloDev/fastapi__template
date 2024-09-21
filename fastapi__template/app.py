@@ -9,12 +9,14 @@ which is part of this source code package.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_sqlalchemy import DBSessionMiddleware
+from fastapi_utils import Api
+from sqladmin import Admin
 
-from fastapi__template.dependencies import find_models, install_apps
+from fastapi__template.dependencies import DEFAULT_ENGINE, install_apps
 from fastapi__template.settings import SETTINGS
 
 
-def create_app() -> FastAPI:
+def __create_app() -> FastAPI:
     """Create FastAPI application."""
     fastapi_app = FastAPI(
         title=SETTINGS.APP_NAME,
@@ -31,6 +33,7 @@ def create_app() -> FastAPI:
         openapi_url="/openapi.json",
     )
     fastapi_app.config = SETTINGS
+    fastapi_app.urls = Api(app=fastapi_app)
 
     # Add middlewares
     fastapi_app.add_middleware(DBSessionMiddleware, db_url=SETTINGS.DATABASE_URL)
@@ -40,11 +43,11 @@ def create_app() -> FastAPI:
         allow_credentials=SETTINGS.ALLOW_CREDENTIALS,
     )
 
-    # Find all models
-    find_models()
+    # Admin settings
+    fastapi_app.default_admin = Admin(fastapi_app, DEFAULT_ENGINE)
 
     return fastapi_app
 
 
-app = create_app()
-install_apps(app)
+app = __create_app()
+app.apps = install_apps(app)
