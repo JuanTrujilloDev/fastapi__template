@@ -9,7 +9,7 @@ which is part of this source code package.
 
 from enum import StrEnum
 
-from fastapi__template.database import get_engine
+from fastapi__template.dependencies.database import get_engine
 from fastapi__template.settings import SETTINGS
 
 TEST_DB_NAME = SETTINGS.DATABASE_NAME + "_test"

@@ -11,8 +11,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_sqlalchemy import DBSessionMiddleware
 from fastapi_utils import Api
 from sqladmin import Admin
+from sqlmodel import StaticPool, create_engine
 
-from fastapi__template.dependencies import DEFAULT_ENGINE, install_apps
+from fastapi__template.dependencies.initializers import install_apps
 from fastapi__template.settings import SETTINGS
 
 
@@ -42,9 +43,12 @@ def __create_app() -> FastAPI:
         allow_origins=SETTINGS.ALLOW_ORIGINS,
         allow_credentials=SETTINGS.ALLOW_CREDENTIALS,
     )
+    fastapi_app.default_engine = create_engine(
+        SETTINGS.DATABASE_URL, poolclass=StaticPool
+    )
 
     # Admin settings
-    fastapi_app.default_admin = Admin(fastapi_app, DEFAULT_ENGINE)
+    fastapi_app.default_admin = Admin(fastapi_app, fastapi_app.default_engine)
 
     return fastapi_app
 

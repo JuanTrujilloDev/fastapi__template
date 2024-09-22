@@ -5,6 +5,11 @@ description = "Template for fastapi projects"
 authors = ["Juan Trujillo <juantrujillo.dev@gmail.com>"]
 readme = "README.md"
 package-mode = false
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Framework :: FastAPI",
+]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -137,6 +142,7 @@ max-line-length = 90
 
 [tool.pytest.ini_options]
 testpaths = ["apps/*/tests/*", "tests"]
+
 
 [tool.coverage.run]
 # Regexes for lines to exclude from consideration

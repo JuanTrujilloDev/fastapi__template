@@ -9,6 +9,7 @@ which is part of this source code package.
 """
 
 ALLOWED_ENGINES = {
+    "sqlite": "sqlite:///./{database_name}.db",
     "postgresql": (
         "postgresql://{database_user}:{database_password}"
         "@{database_host}:{database_port}"
@@ -33,15 +34,9 @@ ALLOWED_ENGINES = {
 def get_engine(**kwargs) -> str:
     """Get database engine."""
     try:
-        return ALLOWED_ENGINES[kwargs.get("database_engine")].format(
-            database_name=kwargs.get("database_name"),
-            database_user=kwargs.get("database_user"),
-            database_password=kwargs.get("database_password"),
-            database_host=kwargs.get("database_host"),
-            database_port=kwargs.get("database_port"),
-        )
+        return ALLOWED_ENGINES[kwargs.get("database_engine")].format(**kwargs)
     except KeyError as e:
         raise ValueError(
-            f"Engine {kwargs.get("database_engine")} not allowed "
+            f"Engine '{kwargs.get("database_engine")}' not allowed "
             f"allowed are: {list(ALLOWED_ENGINES.keys())}."
         ) from e

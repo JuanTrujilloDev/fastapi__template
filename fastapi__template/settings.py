@@ -10,8 +10,8 @@ from typing import ClassVar, List
 
 from pydantic_settings import BaseSettings
 
-from fastapi__template.database import get_engine
-from fastapi__template.load_env import load_env
+from fastapi__template.dependencies.database import get_engine
+from fastapi__template.dependencies.load_env import load_env
 
 
 class Settings(BaseSettings):
