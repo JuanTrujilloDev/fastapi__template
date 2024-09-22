@@ -18,7 +18,7 @@ class AllowedEngines:
         "@{database_host}:{database_port}"
     )
     MYSQL = (  # nosec
-        "mysql://{database_user}:{database_password}@" "{database_host}:{database_port}"
+        "mysql://{database_user}:{database_password}@{database_host}:{database_port}"
     )
     MSSQL = (  # nosec
         "mssql://{database_user}:{database_password}@{database_host}:{database_port}",
