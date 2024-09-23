@@ -3,7 +3,7 @@
 
 # Run black
 echo "Running black..."
-black . --check --config=./pyproject.toml
+black . --config=./pyproject.toml
 
 # Run isort
 echo "Running isort..."
