@@ -15,4 +15,4 @@ from fastapi__template.admin.site import register
 class UserAdmin(BaseModelAdminView, model=User):
     """Model view for User Admin model"""
 
-    column_list = [User.id, User.name]
+    column_list = [User.id, User.email, User.first_name, User.last_name]
