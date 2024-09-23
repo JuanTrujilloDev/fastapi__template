@@ -21,11 +21,12 @@ from apps.common.models.base_model import BaseModel
 class APIKey(BaseModel, table=True):
     """API Key model"""
 
-    # TODO: Validate title and description
     key: str = Field(..., description="API Key")
     short_key: Optional[str] = Field(None, description="Short key")
-    title: str = Field(..., description="Title")
-    description: str = Field(None, description="Description")
+    title: str = Field(..., description="Title", min_length=1, max_length=80)
+    description: str = Field(
+        None, description="Description", min_length=1, max_length=255
+    )
     expiry_date: Optional[datetime] = Field(None, description="Expiry date")
 
     @property

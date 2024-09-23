@@ -24,11 +24,15 @@ class User(BaseModel, table=True):
 
     __tablename__ = "users"
 
-    # TODO: Validate password, first_name, last_name
+    # TODO: Validate password
     email: EmailStr = Field(..., description="Email of the user", unique=True)
     password: str = Field(..., description="Password of the user")
-    first_name: str = Field(..., description="First name of the user", min_length=1)
-    last_name: str = Field(..., description="Last name of the user", min_length=1)
+    first_name: str = Field(
+        ..., description="First name of the user", min_length=1, max_length=50
+    )
+    last_name: str = Field(
+        ..., description="Last name of the user", min_length=1, max_length=50
+    )
     is_staff: bool = Field(default=False, description="Is user staff")
     is_superuser: bool = Field(default=False, description="Is user superuser")
     date_joined: datetime = Field(default=datetime.now(timezone.utc), nullable=False)
