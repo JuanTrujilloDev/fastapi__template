@@ -34,8 +34,12 @@ class DBExistsCommand(StrEnum):
         f"WHERE SCHEMA_NAME = '{TEST_DB_NAME}'"
     )
     MSSQL = f"SELECT 1 FROM sys.databases WHERE name = '{TEST_DB_NAME}'"  # nosec
-    POSTGRESQL_PSYCOPG = f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"  # nosec
-    POSTGRESQL_PSYCOPG2 = f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"  # nosec
+    POSTGRESQL_PSYCOPG = (
+        f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"  # nosec
+    )
+    POSTGRESQL_PSYCOPG2 = (
+        f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"  # nosec
+    )
 
     @classmethod
     def get_command(cls, database_name: str) -> str:
