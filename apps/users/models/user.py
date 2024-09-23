@@ -10,7 +10,7 @@ which is part of this source code package.
 
 from datetime import datetime, timezone
 
-from pydantic import model_validator
+from pydantic import EmailStr, model_validator
 from sqlmodel import Field
 
 from apps.authentication.methods.password_util_methods import (
@@ -24,10 +24,11 @@ class User(BaseModel, table=True):
 
     __tablename__ = "users"
 
-    email: str = Field(..., description="Email of the user")
+    # TODO: Validate password, first_name, last_name
+    email: EmailStr = Field(..., description="Email of the user", unique=True)
     password: str = Field(..., description="Password of the user")
-    first_name: str = Field(..., description="First name of the user")
-    last_name: str = Field(..., description="Last name of the user")
+    first_name: str = Field(..., description="First name of the user", min_length=1)
+    last_name: str = Field(..., description="Last name of the user", min_length=1)
     is_staff: bool = Field(default=False, description="Is user staff")
     is_superuser: bool = Field(default=False, description="Is user superuser")
     date_joined: datetime = Field(default=datetime.now(timezone.utc), nullable=False)
