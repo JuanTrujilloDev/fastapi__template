@@ -140,7 +140,7 @@ max-line-length = 90
 max-line-length = 90
 
 [tool.pytest.ini_options]
-testpaths = ["apps/*/tests/*", "tests"]
+testpaths = ["apps/*/tests/*", "fastapi__template/test/*"]
 
 
 [tool.coverage.run]

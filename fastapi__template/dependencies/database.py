@@ -36,7 +36,9 @@ class AllowedEngines:
     def get_engine(cls, **kwargs) -> str:
         """Get database engine."""
         try:
-            return getattr(cls, kwargs.get("database_engine")).format(**kwargs)
+            return getattr(cls, kwargs.get("database_engine", "").upper()).format(
+                **kwargs
+            )
         except AttributeError as e:
             raise ValueError(
                 f"Engine '{kwargs.get("database_engine")}' not allowed "
