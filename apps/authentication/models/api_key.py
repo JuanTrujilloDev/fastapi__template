@@ -21,6 +21,7 @@ from apps.common.models.base_model import BaseModel
 class APIKey(BaseModel, table=True):
     """API Key model"""
 
+    # TODO: Validate title and description
     key: str = Field(..., description="API Key")
     short_key: Optional[str] = Field(None, description="Short key")
     title: str = Field(..., description="Title")
