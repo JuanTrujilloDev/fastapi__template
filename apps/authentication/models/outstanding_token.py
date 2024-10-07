@@ -54,7 +54,7 @@ class OutstandingToken(BaseModel, table=True):
 
     @field_validator("token_type", mode="after")
     @classmethod
-    def validate_token_type(cks, token_type: str) -> str:
+    def validate_token_type(cls, token_type: str) -> str:
         """Validate token_type."""
         if token_type not in TokenTypes.values():
             raise ValueError("Invalid token type.")
