@@ -11,10 +11,9 @@ which is part of this source code package.
 import alembic
 from alembic.config import Config as AlembicConfig
 
-from fastapi__template.app import create_app
+from fastapi__template.app import app
 
 # init app
-app = create_app()
 app.dependency_overrides = {}
 
 

@@ -4,7 +4,8 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel
 
-from fastapi__template.dependencies import find_models
+from fastapi__template.app import app
+from fastapi__template.dependencies.initializers import install_apps
 from fastapi__template.settings import SETTINGS
 
 # this is the Alembic Config object, which provides
@@ -42,7 +43,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    find_models()
+    install_apps(app)
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
@@ -63,7 +64,7 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    find_models()
+    install_apps(app)
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
