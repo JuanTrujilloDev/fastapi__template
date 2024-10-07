@@ -9,9 +9,10 @@ which is part of this source code package.
 """
 
 from datetime import datetime, timezone
+from typing import List
 
 from pydantic import EmailStr, model_validator
-from sqlmodel import Field
+from sqlmodel import Field, Relationship
 
 from apps.authentication.methods.password_util_methods import (
     hash_password_with_secret_key,
@@ -36,6 +37,11 @@ class User(BaseModel, table=True):
     is_staff: bool = Field(default=False, description="Is user staff")
     is_superuser: bool = Field(default=False, description="Is user superuser")
     date_joined: datetime = Field(default=datetime.now(timezone.utc), nullable=False)
+
+    # relationships
+    outstanding_tokens: List["OutstandingToken"] = Relationship(
+        back_populates="user", cascade_delete=True
+    )
 
     def __str__(self):
         return self.name
