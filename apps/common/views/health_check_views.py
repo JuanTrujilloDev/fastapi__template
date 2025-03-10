@@ -6,12 +6,9 @@ This file is subject to the terms and conditions defined in file 'LICENSE',
 which is part of this source code package.
 """
 
-from fastapi import APIRouter
 from fastapi_utils.cbv import cbv
 
-# pylint: disable=too-few-public-methods
-
-health_check_router = APIRouter(tags=["Health Check"], prefix="/health-check")
+from apps.common.routers import health_check_router
 
 
 @cbv(health_check_router)
