@@ -40,7 +40,6 @@ def register_app(fastapi_app: FastAPI, app: str) -> None:
     module_app.register(fastapi_app)
     find_app_model(app)
     logger.info("App %s is installed.", app)
-    return app
 
 
 def find_app_model(app):
