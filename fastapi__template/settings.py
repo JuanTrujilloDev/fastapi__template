@@ -17,7 +17,6 @@ from fastapi__template.dependencies.load_env import load_env
 class Settings(BaseSettings):
     """Application settings."""
 
-    # pylint: disable=invalid-envvar-default
     load_env()
 
     # Secret Key
@@ -62,6 +61,10 @@ class Settings(BaseSettings):
     # CORS AND SECURITY
     ALLOW_ORIGINS: List[str] = os.getenv("ALLOW_ORIGINS", ["*"])
     ALLOW_CREDENTIALS: bool = os.getenv("ALLOW_CREDENTIALS", True)
+    PASSWORD_REGEX: str = os.getenv(
+        "PASSWORD_REGEX",
+        r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
+    )
 
 
 settings = Settings()

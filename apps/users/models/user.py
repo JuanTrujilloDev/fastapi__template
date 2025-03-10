@@ -25,9 +25,10 @@ class User(BaseModel, table=True):
 
     __tablename__ = "users"
 
-    # TODO: Validate password
+    # TODO: Validate password with regex?
     email: EmailStr = Field(..., description="Email of the user", unique=True)
-    password: str = Field(..., description="Password of the user")
+    password: bytes = Field(..., description="Password of the user")
+    password_salt: bytes = Field(..., description="Password salt of the user")
     first_name: str = Field(
         ..., description="First name of the user", min_length=1, max_length=50
     )
@@ -48,6 +49,6 @@ class User(BaseModel, table=True):
 
     @model_validator(mode="after")
     def hash_password(self):
-        """Hash password before saving"""
-        self.password = hash_password_with_secret_key(self.password)
+        """Hash password and store it with the salt."""
+        self.password, self.password_salt = hash_password_with_secret_key(self.password)
         return self

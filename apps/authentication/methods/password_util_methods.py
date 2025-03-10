@@ -8,36 +8,46 @@ which is part of this source code package.
 
 import hashlib
 import hmac
+from typing import Tuple
 
 import bcrypt
 
 from fastapi__template.settings import settings
 
 
-def hash_password_with_secret_key(password: str) -> str:
-    """Hash the password with the secret key."""
-    # Generate a salt and hash the password
+def hash_password_with_secret_key(password: str) -> Tuple[str, bytes]:
+    """
+    Hash the password with the secret key.
+
+    Args:
+        password (bytes): Password.
+
+    Returns:
+        Tuple[bytes, bytes]: Hashed password and salt.
+    """
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
-
-    # Generate HMAC of the hashed password using the secret key
-    hmac_hash = hmac.new(
+    hashed_password_with_secret_key = hmac.new(
         settings.SECRET_KEY.encode("utf-8"), hashed_password, hashlib.sha512
-    ).hexdigest()
-
-    # Store salt and HMAC together
-    return f"{salt.decode('utf-8')}:{hmac_hash}"
+    ).digest()
+    return hashed_password_with_secret_key, salt
 
 
-def verify_password(stored_data: str, password: str) -> bool:
-    """Verify the password."""
-    salt, stored_hmac = stored_data.split(":")
-    # Hash the password using the same salt
-    hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt.encode("utf-8"))
+def verify_password(stored_password: bytes, stored_salt: bytes, password: str) -> bool:
+    """
+    Verify the password.
 
-    # Generate HMAC for the hashed password
-    hmac_hash = hmac.new(
+    Gets the stored data and password and verifies if the password is correct.
+
+    Args:
+        stored_data (bytes): Stored data.
+        password (bytes): Password.
+
+    Returns:
+        bool: True if the password is correct, False otherwise.
+    """
+    hashed_password = bcrypt.hashpw(password.encode("utf-8"), stored_salt)
+    hashed_password_with_secret_key = hmac.new(
         settings.SECRET_KEY.encode("utf-8"), hashed_password, hashlib.sha512
-    ).hexdigest()
-
-    return hmac.compare_digest(hmac_hash, stored_hmac)
+    ).digest()
+    return hmac.compare_digest(hashed_password_with_secret_key, stored_password)

@@ -9,13 +9,15 @@ class TestPasswordUtilMethods(TestCase):
     def setUp(self):
         super().setUp()
         self.password = "password"
-        self.hashed_password = hash_password_with_secret_key(self.password)
+        self.hashed_password, self.salt = hash_password_with_secret_key(self.password)
 
     def test_hash_password_with_secret_key_returns_hashed_password(self):
         self.assertNotEqual(self.password, self.hashed_password)
 
     def test_verify_password_returns_true_for_valid_password(self):
-        self.assertTrue(verify_password(self.hashed_password, self.password))
+        self.assertTrue(verify_password(self.hashed_password, self.salt, self.password))
 
     def test_verify_password_returns_false_for_invalid_password(self):
-        self.assertFalse(verify_password(self.hashed_password, "invalid_password"))
+        self.assertFalse(
+            verify_password(self.hashed_password, self.salt, "invalid_password")
+        )
