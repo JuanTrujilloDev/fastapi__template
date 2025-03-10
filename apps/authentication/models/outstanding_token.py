@@ -27,7 +27,7 @@ class OutstandingToken(BaseModel, table=True):
     __tablename__ = "outstanding_tokens"
 
     jti: str = Field(..., unique=True, description="JWT ID")
-    token_type: str = Field(..., description="Token type")
+    token_type: TokenTypes = Field(..., description="Token type")
     expires_at: datetime = Field(..., description="Token expiry time")
     revoked: bool = Field(default=False, description="Is token revoked")
     revoked_at: int = Field(default=None, description="Token revoked time")
@@ -51,14 +51,6 @@ class OutstandingToken(BaseModel, table=True):
         if expires_at < datetime.now():
             raise ValueError("Expiry date should be greater than today.")
         return expires_at
-
-    @field_validator("token_type", mode="after")
-    @classmethod
-    def validate_token_type(cls, token_type: str) -> str:
-        """Validate token_type."""
-        if token_type not in TokenTypes.values():
-            raise ValueError("Invalid token type.")
-        return token_type
 
     @field_validator("user_id", mode="after")
     @classmethod

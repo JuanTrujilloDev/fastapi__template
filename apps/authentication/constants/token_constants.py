@@ -14,7 +14,3 @@ class TokenTypes(StrEnum):
 
     ACCESS = "access"
     REFRESH = "refresh"
-
-    @staticmethod
-    def values():
-        return TokenTypes._value2member_map_
