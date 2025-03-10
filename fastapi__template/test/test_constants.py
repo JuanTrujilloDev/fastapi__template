@@ -10,9 +10,9 @@ which is part of this source code package.
 from enum import StrEnum
 
 from fastapi__template.dependencies.database import AllowedEngines
-from fastapi__template.settings import SETTINGS
+from fastapi__template.settings import settings
 
-TEST_DB_NAME = SETTINGS.DATABASE_NAME + "_test"
+TEST_DB_NAME = settings.DATABASE_NAME + "_test"
 
 
 class DBExistsCommand(StrEnum):
@@ -53,10 +53,10 @@ class DBExistsCommand(StrEnum):
 
 
 TEST_DB_ENGINE = AllowedEngines.get_engine(
-    database_engine=SETTINGS.DATABASE_ENGINE_NAME,
-    database_name=SETTINGS.DATABASE_NAME,
-    database_user=SETTINGS.DATABASE_USER,
-    database_password=SETTINGS.DATABASE_PASSWORD,
-    database_host=SETTINGS.DATABASE_HOST,
-    database_port=SETTINGS.DATABASE_PORT,
+    database_engine=settings.DATABASE_ENGINE_NAME,
+    database_name=settings.DATABASE_NAME,
+    database_user=settings.DATABASE_USER,
+    database_password=settings.DATABASE_PASSWORD,
+    database_host=settings.DATABASE_HOST,
+    database_port=settings.DATABASE_PORT,
 )

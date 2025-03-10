@@ -16,7 +16,7 @@ from fastapi_jwt import (
 
 from apps.authentication.constants.token_constants import TokenTypes
 from apps.authentication.models.outstanding_token import OutstandingToken
-from fastapi__template.settings import SETTINGS
+from fastapi__template.settings import settings
 
 
 def create_access_token(data: dict, user_id: UUID) -> str:
@@ -32,8 +32,8 @@ def create_access_token(data: dict, user_id: UUID) -> str:
 
     str: Access token.
     """
-    token = JwtAccessBearer(SETTINGS.SECRET_KEY).create_access_token(
-        data, expires_delta=timedelta(minutes=SETTINGS.ACCESS_TOKEN_EXPIRE_MINUTES)
+    token = JwtAccessBearer(settings.SECRET_KEY).create_access_token(
+        data, expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
     OutstandingToken(
         jti=token["jti"],
@@ -57,8 +57,8 @@ def create_refresh_token(data: dict, user_id: UUID) -> str:
 
     str: Refresh token.
     """
-    token = JwtRefreshBearer(SETTINGS.SECRET_KEY).create_refresh_token(
-        data, expires_delta=timedelta(days=SETTINGS.REFRESH_TOKEN_EXPIRE_DAYS)
+    token = JwtRefreshBearer(settings.SECRET_KEY).create_refresh_token(
+        data, expires_delta=timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
     )
     OutstandingToken(
         jti=token["jti"],

@@ -8,7 +8,7 @@ which is part of this source code package.
 
 import uvicorn
 
-from fastapi__template.settings import SETTINGS
+from fastapi__template.settings import settings
 
 
 def main():
@@ -16,7 +16,7 @@ def main():
 
     uvicorn.run(
         "fastapi__template.app:app",
-        host=SETTINGS.HOST,
-        port=SETTINGS.PORT,
-        reload=SETTINGS.RELOAD,
+        host=settings.HOST,
+        port=settings.PORT,
+        reload=settings.RELOAD,
     )

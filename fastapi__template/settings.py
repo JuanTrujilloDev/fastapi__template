@@ -64,4 +64,4 @@ class Settings(BaseSettings):
     ALLOW_CREDENTIALS: bool = os.getenv("ALLOW_CREDENTIALS", True)
 
 
-SETTINGS = Settings()
+settings = Settings()

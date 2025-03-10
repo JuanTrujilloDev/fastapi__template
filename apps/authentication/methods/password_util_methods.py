@@ -11,7 +11,7 @@ import hmac
 
 import bcrypt
 
-from fastapi__template.settings import SETTINGS
+from fastapi__template.settings import settings
 
 
 def hash_password_with_secret_key(password: str) -> str:
@@ -22,7 +22,7 @@ def hash_password_with_secret_key(password: str) -> str:
 
     # Generate HMAC of the hashed password using the secret key
     hmac_hash = hmac.new(
-        SETTINGS.SECRET_KEY.encode("utf-8"), hashed_password, hashlib.sha512
+        settings.SECRET_KEY.encode("utf-8"), hashed_password, hashlib.sha512
     ).hexdigest()
 
     # Store salt and HMAC together
@@ -37,7 +37,7 @@ def verify_password(stored_data: str, password: str) -> bool:
 
     # Generate HMAC for the hashed password
     hmac_hash = hmac.new(
-        SETTINGS.SECRET_KEY.encode("utf-8"), hashed_password, hashlib.sha512
+        settings.SECRET_KEY.encode("utf-8"), hashed_password, hashlib.sha512
     ).hexdigest()
 
     return hmac.compare_digest(hmac_hash, stored_hmac)

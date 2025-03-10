@@ -6,7 +6,7 @@ from sqlmodel import SQLModel
 
 from fastapi__template.app import app
 from fastapi__template.dependencies.initializers import install_apps
-from fastapi__template.settings import SETTINGS
+from fastapi__template.settings import settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -17,7 +17,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", SETTINGS.DATABASE_URL)
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
