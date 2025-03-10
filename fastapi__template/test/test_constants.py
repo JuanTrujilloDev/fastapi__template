@@ -9,7 +9,7 @@ which is part of this source code package.
 
 from enum import StrEnum
 
-from fastapi__template.database import get_engine
+from fastapi__template.dependencies.database import AllowedEngines
 from fastapi__template.settings import SETTINGS
 
 TEST_DB_NAME = SETTINGS.DATABASE_NAME + "_test"
@@ -28,14 +28,18 @@ class DBExistsCommand(StrEnum):
         postgresql_psycopg2: PostgreSQL database exists command for psycopg
     """
 
-    POSTGRESQL = f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"
+    POSTGRESQL = f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"  # nosec
     MYSQL = (
-        "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA "
+        "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA "  # nosec
         f"WHERE SCHEMA_NAME = '{TEST_DB_NAME}'"
     )
-    MSSQL = f"SELECT 1 FROM sys.databases WHERE name = '{TEST_DB_NAME}'"
-    POSTGRESQL_PSYCOPG = f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"
-    POSTGRESQL_PSYCOPG2 = f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"
+    MSSQL = f"SELECT 1 FROM sys.databases WHERE name = '{TEST_DB_NAME}'"  # nosec
+    POSTGRESQL_PSYCOPG = (
+        f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"  # nosec
+    )
+    POSTGRESQL_PSYCOPG2 = (
+        f"SELECT 1 FROM pg_database WHERE datname = '{TEST_DB_NAME}'"  # nosec
+    )
 
     @classmethod
     def get_command(cls, database_name: str) -> str:
@@ -48,7 +52,7 @@ class DBExistsCommand(StrEnum):
             raise ValueError(f"Invalid database engine {database_name}") from error
 
 
-TEST_DB_ENGINE = get_engine(
+TEST_DB_ENGINE = AllowedEngines.get_engine(
     database_engine=SETTINGS.DATABASE_ENGINE_NAME,
     database_name=SETTINGS.DATABASE_NAME,
     database_user=SETTINGS.DATABASE_USER,

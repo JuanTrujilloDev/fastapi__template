@@ -13,7 +13,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 
 from fastapi__template.app import app
-from fastapi__template.dependencies import DEFAULT_ENGINE
 
 
 class TestCase(unittest.TestCase):
@@ -43,7 +42,7 @@ class TransactionTestCase(unittest.TestCase):
         self.app = app
         self.client = TestClient(self.app)
         self.base_model = SQLModel
-        self.engine = DEFAULT_ENGINE
+        self.engine = self.app.default_engine
         self.session = sessionmaker(bind=self.engine)()
         self.db = Mock()
         self.db.session = self.session

@@ -10,13 +10,14 @@ from typing import ClassVar, List
 
 from pydantic_settings import BaseSettings
 
-from fastapi__template.database import get_engine
-from fastapi__template.load_env import load_env
+from fastapi__template.dependencies.database import AllowedEngines
+from fastapi__template.dependencies.load_env import load_env
 
 
 class Settings(BaseSettings):
     """Application settings."""
 
+    # pylint: disable=invalid-envvar-default
     load_env()
 
     # Secret Key
@@ -48,7 +49,7 @@ class Settings(BaseSettings):
     DATABASE_USER: str = os.getenv("DATABASE_USER", "fastapi_template")
     DATABASE_PASSWORD: str = os.getenv("DATABASE_PASSWORD", "fastapi_template")
     DATABASE_ENGINE_NAME: str = os.getenv("DATABASE_ENGINE", "postgresql")
-    DATABASE_ENGINE: str = get_engine(
+    DATABASE_ENGINE: str = AllowedEngines.get_engine(
         database_engine=DATABASE_ENGINE_NAME,
         database_name=DATABASE_NAME,
         database_user=DATABASE_USER,

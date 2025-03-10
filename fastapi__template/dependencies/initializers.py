@@ -1,6 +1,6 @@
 """
 
-Dependencies for FastAPI application.
+Initializer helper methods.
 
 This file is subject to the terms and conditions defined in file 'LICENSE',
 which is part of this source code package.
@@ -13,32 +13,8 @@ import pkgutil
 from typing import Callable
 
 from fastapi import FastAPI
-from sqlmodel import StaticPool, create_engine
 
 from fastapi__template.settings import SETTINGS
-
-ALLOWED_ENGINES = {
-    "sqlite": (f"sqlite:///{SETTINGS.DATABASE_NAME}"),
-    "postgresql": (
-        f"postgresql://{SETTINGS.DATABASE_USER}:{SETTINGS.DATABASE_PASSWORD}"
-        f"@{SETTINGS.DATABASE_HOST}:{SETTINGS.DATABASE_PORT}"
-    ),
-    "mysql": (
-        f"mysql://{SETTINGS.DATABASE_USER}:{SETTINGS.DATABASE_PASSWORD}"
-        f"@{SETTINGS.DATABASE_HOST}:{SETTINGS.DATABASE_PORT}"
-    ),
-    "oracle": (
-        f"oracle://{SETTINGS.DATABASE_USER}:{SETTINGS.DATABASE_PASSWORD}"
-        f"@{SETTINGS.DATABASE_HOST}:{SETTINGS.DATABASE_PORT}"
-    ),
-    "mssql": (
-        f"mssql://{SETTINGS.DATABASE_USER}:{SETTINGS.DATABASE_PASSWORD}"
-        f"@{SETTINGS.DATABASE_HOST}:{SETTINGS.DATABASE_PORT}"
-    ),
-}
-
-
-DEFAULT_ENGINE = create_engine(SETTINGS.DATABASE_URL, poolclass=StaticPool)
 
 
 def install_apps(fastapi_app: FastAPI) -> list:
@@ -58,6 +34,8 @@ def install_apps(fastapi_app: FastAPI) -> list:
             raise ValueError(f"App module {app} not found {e}.") from e
         except Exception as e:
             raise ValueError(f"Error registering app {app} {e}.") from e
+
+    return SETTINGS.INSTALLED_APPS
 
 
 def find_app_model(app):
