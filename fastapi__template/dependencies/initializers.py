@@ -34,12 +34,13 @@ def register_app(fastapi_app: FastAPI, app: str) -> None:
     """Register an app."""
     logger = logging.getLogger("uvicorn.error")
     module_app = importlib.import_module(f"{app}.app")
-    if hasattr(module_app, "register"):
-        module_app.register(fastapi_app)
-        find_app_model(app)
-        logger.info("App %s is installed.", app)
-    else:
+    if not hasattr(module_app, "register"):
         raise ValueError(f"There is no register method in your app module {app}.")
+
+    module_app.register(fastapi_app)
+    find_app_model(app)
+    logger.info("App %s is installed.", app)
+    return app
 
 
 def find_app_model(app):
