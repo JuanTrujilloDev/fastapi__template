@@ -144,6 +144,8 @@ max-line-length = 90
 
 [tool.pytest.ini_options]
 testpaths = ["apps/*/tests/*", "fastapi__template/test/*"]
+addopts = ["--cov=apps", "--cov-report=term-missing", "--cov-report=html"]
+
 
 
 [tool.coverage.run]
