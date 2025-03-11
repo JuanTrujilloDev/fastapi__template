@@ -8,8 +8,6 @@ which is part of this source code package.
 
 import importlib
 import logging
-import os
-import pkgutil
 from typing import Callable
 
 from fastapi import FastAPI
@@ -38,16 +36,20 @@ def register_app(fastapi_app: FastAPI, app: str) -> None:
         raise ValueError(f"There is no register method in your app module {app}.")
 
     module_app.register(fastapi_app)
-    find_app_model(app)
+    find_routers(fastapi_app, app)
     logger.info("App %s is installed.", app)
 
 
-def find_app_model(app):
-    """Find all models in the application."""
-    module_app = importlib.import_module(f"{app}.app")
-    models = os.path.join(os.path.dirname(module_app.__file__), "models")
-    for model in pkgutil.iter_modules([models]):
-        model = importlib.import_module(f"{app}.models.{model.name}")
+def find_routers(fastapi_app: FastAPI, app: str) -> list:
+    """Find routers in the app."""
+    try:
+        module_app = importlib.import_module(f"{app}.routers")
+    except ModuleNotFoundError:
+        return
+    else:
+        routers = getattr(module_app, "routers", [])
+        for router in routers:
+            fastapi_app.include_router(router)
 
 
 def customize_openapi(func: Callable[..., dict]) -> Callable[..., dict]:

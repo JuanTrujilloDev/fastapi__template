@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     URL_REDOCS: str = os.getenv("URL_REDOCS", "/redocs")
 
     # Installed apps
-    INSTALLED_APPS: list = ["apps.common", "apps.authentication", "apps.users"]
+    INSTALLED_APPS: List[str] = ["apps.common", "apps.authentication", "apps.users"]
 
     # Database Settings
     DATABASE_HOST: str = os.getenv("DATABASE_HOST", "localhost")
@@ -68,3 +68,5 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+# TODO: Review project code and structure

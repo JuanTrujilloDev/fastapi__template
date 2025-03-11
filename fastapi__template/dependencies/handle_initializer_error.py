@@ -26,7 +26,7 @@ def handle_initializer_error(
         try:
             return func(*args, **kwargs)
         except ModuleNotFoundError as e:
-            raise ValueError(f"App module {args[1]} not found {e}.") from e
+            raise ValueError(f"App {args[1]} is missing a module. {e}.") from e
         except Exception as e:
             raise ValueError(f"Error registering app {args[1]} {e}.") from e
 

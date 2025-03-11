@@ -8,11 +8,11 @@ This file is subject to the terms and conditions defined in file 'LICENSE',
 which is part of this source code package.
 """
 
-from datetime import datetime, timezone
 from typing import List
 
 import bcrypt
-from pydantic import EmailStr, model_validator
+from fastapi_sqlalchemy import db
+from pydantic import EmailStr, field_validator, model_validator
 from sqlmodel import Field, Relationship
 
 from apps.authentication.methods.hash_util_methods import (
@@ -41,7 +41,6 @@ class User(BaseModel, table=True):
     )
     is_staff: bool = Field(default=False, description="Is user staff")
     is_superuser: bool = Field(default=False, description="Is user superuser")
-    date_joined: datetime = Field(default=datetime.now(timezone.utc), nullable=False)
 
     # relationships
     outstanding_tokens: List["OutstandingToken"] = Relationship(
@@ -54,5 +53,27 @@ class User(BaseModel, table=True):
     @model_validator(mode="after")
     def hash_password(self):
         """Hash password and store it with the salt."""
-        self.password = hash_string_with_secret_key(self.password, self.password_salt)
+        if not self.password:
+            return self
+
+        self.password = hash_string_with_secret_key(
+            str(self.password), self.password_salt
+        )
         return self
+
+    @field_validator("email", mode="after")
+    @classmethod
+    def validate_email_repeated(cls, value: EmailStr, values):
+        """Validate email is not repeated."""
+        if not value:
+            return value
+
+        user = (
+            db.session.query(User)
+            .filter(User.email == value, User.id != values.data.get("id"))
+            .first()
+        )
+        if user:
+            raise ValueError("User with this email already exists.")
+
+        return value

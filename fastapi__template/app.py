@@ -34,6 +34,7 @@ def __create_app() -> FastAPI:
     )
     fastapi_app.config = settings
     fastapi_app.urls = Api(app=fastapi_app)
+    fastapi_app.registered_models = []
 
     # Add middlewares
     fastapi_app.add_middleware(DBSessionMiddleware, db_url=settings.DATABASE_URL)
@@ -45,7 +46,6 @@ def __create_app() -> FastAPI:
     fastapi_app.default_engine = create_engine(
         settings.DATABASE_URL, poolclass=StaticPool
     )
-
     return fastapi_app
 
 

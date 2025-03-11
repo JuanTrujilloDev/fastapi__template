@@ -1,6 +1,6 @@
 """
 
-Base model for SQLAlchemy
+Base model schema for read and write operations.
 
 This file is subject to the terms and conditions defined in file 'LICENSE',
 which is part of this source code package.
@@ -11,15 +11,10 @@ from datetime import datetime, timezone
 from functools import partial
 from typing import Optional
 
-from pydantic import ConfigDict
-from sqlmodel import Field, SQLModel
-
-from apps.common.models.validation_sqlmodel import ValidationSQLModelMeta
+from pydantic import BaseModel, Field
 
 
-class BaseModel(SQLModel, metaclass=ValidationSQLModelMeta):
-    """Base model for all models"""
-
+class BaseModelSchema(BaseModel):
     id: Optional[uuid.UUID] = Field(
         primary_key=True,
         nullable=False,
@@ -33,5 +28,3 @@ class BaseModel(SQLModel, metaclass=ValidationSQLModelMeta):
     updated_at: Optional[datetime] = Field(
         default_factory=partial(datetime.now, tz=timezone.utc), nullable=False
     )
-
-    model_config = ConfigDict(from_attributes=True)
