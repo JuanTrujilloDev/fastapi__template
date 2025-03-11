@@ -31,26 +31,26 @@ class TestApiKeyModel(TransactionTestCase):
         self.db.session.add_all([self.api_key, self.expired_api_key])
         self.db.session.commit()
 
-    def test_read_api_key_returns_correct_api_key(self):
+    def test_when_read_api_key_then_returns_correct_api_key(self):
         api_key = self.db.session.query(APIKey).filter(APIKey.title == "test_key").first()
         self.assertEqual(api_key.title, "test_key")
 
-    def test_read_expired_api_key_is_enabled_return_false(self):
+    def test_when_read_expired_api_key_is_enabled_then_return_false(self):
         api_key = (
             self.db.session.query(APIKey).filter(APIKey.title == "expired_key").first()
         )
         self.assertFalse(api_key.enabled)
 
-    def test_read_non_expired_api_key_is_enabled_return_true(self):
+    def test_when_read_non_expired_api_key_is_enabled_then_return_true(self):
         api_key = self.db.session.query(APIKey).filter(APIKey.title == "test_key").first()
         self.assertTrue(api_key.enabled)
 
-    def test_read_non_expired_api_key_with_is_active_false_is_enabled_return_false(self):
+    def test_when_read_non_expired_api_key_with_is_active_false_then_return_false(self):
         api_key = self.db.session.query(APIKey).filter(APIKey.title == "test_key").first()
         api_key.is_active = False
         self.assertFalse(api_key.enabled)
 
-    def test_create_api_key_returns_created_api_key(self):
+    def test_whencreate_api_key_then_returns_created_api_key(self):
         api_key = APIKey(
             title="new_key", description="New Key", key=secrets.token_urlsafe(32)
         )
@@ -58,13 +58,13 @@ class TestApiKeyModel(TransactionTestCase):
         self.db.session.commit()
         self.assertEqual(api_key.title, "new_key")
 
-    def test_update_api_key_returns_updated_api_key(self):
+    def test_when_update_api_key_then_returns_updated_api_key(self):
         api_key = self.db.session.query(APIKey).filter(APIKey.title == "test_key").first()
         api_key.title = "updated_key"
         self.db.session.commit()
         self.assertEqual(api_key.title, "updated_key")
 
-    def test_delete_api_key_returns_deleted_api_key(self):
+    def test_when_delete_api_key_then_returns_deleted_api_key(self):
         api_key = self.db.session.query(APIKey).filter(APIKey.title == "test_key").first()
         self.db.session.delete(api_key)
         self.db.session.commit()
@@ -72,19 +72,19 @@ class TestApiKeyModel(TransactionTestCase):
             self.db.session.query(APIKey).filter(APIKey.title == "test_key").first()
         )
 
-    def test_create_api_key_without_key_raises_error(self):
+    def test_when_create_api_key_without_key_then_raises_error(self):
         with self.assertRaises(ValidationError) as e:
             APIKey(title="new_key", description="New Key")
         self.assertEqual(str(e.exception.errors()[0]["msg"]), "Field required")
 
-    def test_create_api_key_with_non_string_key_raises_error(self):
+    def test_when_create_api_key_with_non_string_or_bytes_key_then_raises_error(self):
         with self.assertRaises(ValueError) as e:
             APIKey(title="new_key", description="New Key", key=123)
         self.assertEqual(
-            str(e.exception.errors()[0]["msg"]), "Input should be a valid string"
+            str(e.exception.errors()[0]["msg"]), "Input should be a valid bytes"
         )
 
-    def test_create_api_key_with_past_expiry_date_raises_error(self):
+    def test_when_create_api_key_with_past_expiry_date_then_raises_error(self):
         with self.assertRaises(ValueError) as e:
             APIKey(
                 title="new_key",
@@ -97,7 +97,7 @@ class TestApiKeyModel(TransactionTestCase):
             "Value error, Expiry date should be greater than today.",
         )
 
-    def test_create_api_key_with_manual_key_returns_correct_short_key(self):
+    def test_when_create_api_key_with_manual_key_then_returns_correct_short_key(self):
         api_key = APIKey(title="new_key32", description="New Key", key="testing key")
         self.db.session.add(api_key)
         self.db.session.commit()

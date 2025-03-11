@@ -11,11 +11,12 @@ which is part of this source code package.
 from datetime import datetime, timezone
 from typing import List
 
+import bcrypt
 from pydantic import EmailStr, model_validator
 from sqlmodel import Field, Relationship
 
-from apps.authentication.methods.password_util_methods import (
-    hash_password_with_secret_key,
+from apps.authentication.methods.hash_util_methods import (
+    hash_string_with_secret_key,
 )
 from apps.common.models.base_model import BaseModel
 
@@ -28,7 +29,10 @@ class User(BaseModel, table=True):
     # TODO: Validate password with regex?
     email: EmailStr = Field(..., description="Email of the user", unique=True)
     password: bytes = Field(..., description="Password of the user")
-    password_salt: bytes = Field(..., description="Password salt of the user")
+    password_salt: bytes = Field(
+        default_factory=bcrypt.gensalt,
+        description="Password salt of the user",
+    )
     first_name: str = Field(
         ..., description="First name of the user", min_length=1, max_length=50
     )
@@ -50,5 +54,5 @@ class User(BaseModel, table=True):
     @model_validator(mode="after")
     def hash_password(self):
         """Hash password and store it with the salt."""
-        self.password, self.password_salt = hash_password_with_secret_key(self.password)
+        self.password = hash_string_with_secret_key(self.password, self.password_salt)
         return self
