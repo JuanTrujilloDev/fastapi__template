@@ -15,7 +15,7 @@ from fastapi_utils.cbv import cbv
 from apps.users.models.user import User
 from apps.users.schemas.user_schemas import UserCreateSchema, UserReadSchema
 
-user_router = APIRouter(tags=["User Actions"], prefix="/users")
+user_router = APIRouter()
 
 
 @cbv(user_router)
@@ -42,13 +42,7 @@ class UserViews:
     @user_router.post("/", response_model=UserReadSchema)
     async def create_user(self, user_data: UserCreateSchema):
         """Create a user."""
-        try:
-            user = User(**user_data.model_dump())
-            db.session.add(user)
-            db.session.commit()
-            return user
-        except Exception as e:
-            db.session.rollback()
-            if "unique constraint" in str(e).lower() and "email" in str(e).lower():
-                return {"error": "User with this email already exists"}
-            raise
+        user = User(**user_data.model_dump())
+        db.session.add(user)
+        db.session.commit()
+        return user

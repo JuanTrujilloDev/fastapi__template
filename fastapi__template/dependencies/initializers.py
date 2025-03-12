@@ -46,10 +46,6 @@ def find_routers(fastapi_app: FastAPI, app: str) -> list:
         module_app = importlib.import_module(f"{app}.routers")
     except ModuleNotFoundError:
         return
-    else:
-        routers = getattr(module_app, "routers", [])
-        for router in routers:
-            fastapi_app.include_router(router)
 
 
 def customize_openapi(func: Callable[..., dict]) -> Callable[..., dict]:

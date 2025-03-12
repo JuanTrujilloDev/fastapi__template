@@ -8,10 +8,7 @@ which is part of this source code package.
 
 from fastapi import FastAPI
 
-from apps.common.routers import health_check_router
-
 
 def register(app: FastAPI):
     """Register app instance."""
-    app.include_router(health_check_router)
     return app

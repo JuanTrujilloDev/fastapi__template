@@ -6,9 +6,10 @@ This file is subject to the terms and conditions defined in file 'LICENSE',
 which is part of this source code package.
 """
 
+from fastapi import APIRouter
 from fastapi_utils.cbv import cbv
 
-from apps.common.routers import health_check_router
+health_check_router = APIRouter()
 
 
 @cbv(health_check_router)

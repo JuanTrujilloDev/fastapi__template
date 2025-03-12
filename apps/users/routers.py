@@ -9,5 +9,6 @@ which is part of this source code package.
 """
 
 from apps.users.views.user_views import user_router
+from fastapi__template.app import app
 
-routers = [user_router]
+app.include_router(user_router, prefix="/users", tags=["users"])

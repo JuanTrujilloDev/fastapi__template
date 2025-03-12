@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 from apps.common.schemas.base_model_schema import BaseModelSchema
 
@@ -14,9 +14,11 @@ class UserCreateSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class UserReadSchema(UserCreateSchema, BaseModelSchema):
+class UserReadSchema(BaseModelSchema):
     """User schema."""
 
-    password: None = Field(None, exclude=True)
+    email: EmailStr
+    first_name: str
+    last_name: str
 
     model_config = ConfigDict(from_attributes=True)

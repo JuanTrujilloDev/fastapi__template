@@ -7,11 +7,18 @@ which is part of this source code package.
 """
 
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_sqlalchemy import DBSessionMiddleware
-from fastapi_utils import Api
+from pydantic import ValidationError
 from sqlmodel import StaticPool, create_engine
 
+from apps.exceptions.handlers.pydantic_validation_error_handler import (
+    pydantic_validation_error_handler,
+)
+from apps.exceptions.handlers.request_validation_error_handler import (
+    request_validation_error_handler,
+)
 from fastapi__template.dependencies.initializers import install_apps
 from fastapi__template.settings import settings
 
@@ -33,8 +40,8 @@ def __create_app() -> FastAPI:
         openapi_url="/openapi.json",
     )
     fastapi_app.config = settings
-    fastapi_app.urls = Api(app=fastapi_app)
     fastapi_app.registered_models = []
+    fastapi_app.routers = []
 
     # Add middlewares
     fastapi_app.add_middleware(DBSessionMiddleware, db_url=settings.DATABASE_URL)
@@ -46,6 +53,12 @@ def __create_app() -> FastAPI:
     fastapi_app.default_engine = create_engine(
         settings.DATABASE_URL, poolclass=StaticPool
     )
+
+    # TODO: Add custom exception handlers
+    fastapi_app.exception_handlers = {
+        RequestValidationError: request_validation_error_handler,
+        ValidationError: pydantic_validation_error_handler,
+    }
     return fastapi_app
 
 

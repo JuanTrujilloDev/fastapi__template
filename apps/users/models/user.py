@@ -13,12 +13,14 @@ from typing import List
 import bcrypt
 from fastapi_sqlalchemy import db
 from pydantic import EmailStr, field_validator, model_validator
+from pydantic_core import PydanticCustomError
 from sqlmodel import Field, Relationship
 
 from apps.authentication.methods.hash_util_methods import (
     hash_string_with_secret_key,
 )
 from apps.common.models.base_model import BaseModel
+from apps.exceptions.constants.error_codes import ErrorCodes
 
 
 class User(BaseModel, table=True):
@@ -74,6 +76,9 @@ class User(BaseModel, table=True):
             .first()
         )
         if user:
-            raise ValueError("User with this email already exists.")
+            raise PydanticCustomError(
+                ErrorCodes.DUPLICATE_DATA,
+                f"Email {value} already exists",
+            )
 
         return value
