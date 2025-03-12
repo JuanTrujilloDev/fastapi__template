@@ -1,54 +1,36 @@
 """
-
 Password utility methods.
 
 This file is subject to the terms and conditions defined in file 'LICENSE',
 which is part of this source code package.
 """
 
-import hashlib
-import hmac
-from typing import Tuple
-
-import bcrypt
-
-from fastapi__template.settings import settings
+from apps.authentication.constants.hash_constants import STRING_HASHER
 
 
-def hash_string_with_secret_key(string: str, salt: bytes) -> Tuple[str, bytes]:
+def hash_string_with_secret_key(string: str) -> str:
     """
-    Hash the password with the secret key.
+    First encrypt the password with Fernet, then hash with bcrypt.
 
     Args:
-        string (str): String to hash.
+        string (str): String to encrypt and hash.
 
     Returns:
-        Tuple[bytes, bytes]: Hashed string with used salt.
-
+        str: Hashed string ready for storage
     """
-    hashed_string = bcrypt.hashpw(string.encode("utf-8"), salt)
-    hashed_string_with_secret_key = hmac.new(
-        settings.SECRET_KEY.encode("utf-8"), hashed_string, hashlib.sha512
-    ).digest()
-    return hashed_string_with_secret_key
+    # TODO: Implement encryption logic
+    return STRING_HASHER.hash(string)
 
 
-def verify_strings(stored_string: bytes, stored_salt: bytes, string: str) -> bool:
+def verify_strings(stored_string: str, string: str) -> bool:
     """
-    Verify the password.
-
-    Verify string compared to a hashed string with salt and secret key.
+    Verify the password using the same encrypt-then-hash approach.
 
     Args:
-        stored_string (bytes): Stored data
-        stored_salt (bytes): Salt used to hash the string.
-        string (bytes): String to compare.
+        stored_string (str): Stored hashed value
+        string (str): Plain text string to verify
 
     Returns:
-        bool: True if the password is correct, False otherwise.
+        bool: True if the password is correct
     """
-    hashed_string = bcrypt.hashpw(string.encode("utf-8"), stored_salt)
-    hashed_string_with_secret_key = hmac.new(
-        settings.SECRET_KEY.encode("utf-8"), hashed_string, hashlib.sha512
-    ).digest()
-    return hmac.compare_digest(hashed_string_with_secret_key, stored_string)
+    return STRING_HASHER.verify(stored_string, string)

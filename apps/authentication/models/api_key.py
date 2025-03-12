@@ -11,7 +11,6 @@ which is part of this source code package.
 from datetime import date, datetime
 from typing import Optional
 
-import bcrypt
 from pydantic import field_validator, model_validator
 from sqlmodel import Field
 
@@ -22,10 +21,7 @@ from apps.common.models.base_model import BaseModel
 class APIKey(BaseModel, table=True):
     """API Key model"""
 
-    key: bytes = Field(..., description="API Key", allow_mutation=False)
-    salt: bytes = Field(
-        default_factory=bcrypt.gensalt, description="Salt", allow_mutation=False
-    )
+    key: str = Field(..., description="API Key", allow_mutation=False)
     short_key: Optional[str] = Field(None, description="Short key")
     title: str = Field(..., description="Title", min_length=1, max_length=80)
     description: str = Field(
@@ -54,7 +50,6 @@ class APIKey(BaseModel, table=True):
     @model_validator(mode="after")
     def generate_hash_key(self):
         """Generate short key"""
-        self.key = self.key.decode("utf-8") if isinstance(self.key, bytes) else self.key
         self.short_key = self.key[:5]
-        self.key = hash_string_with_secret_key(self.key, self.salt)
+        self.key = hash_string_with_secret_key(self.key)
         return self

@@ -15,7 +15,7 @@ async def pydantic_validation_error_handler(request: Request, exc: ValidationErr
     """
     Pydantic validation error handler.
     """
-    request_json = await request.json()
+    request_json = await request.json() if await request.body() else None
     return JSONResponse(
         status_code=400,
         content=jsonable_encoder({"detail": exc.errors(), "body": request_json}),

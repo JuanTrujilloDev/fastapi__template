@@ -10,7 +10,6 @@ which is part of this source code package.
 
 from typing import List
 
-import bcrypt
 from fastapi_sqlalchemy import db
 from pydantic import EmailStr, field_validator, model_validator
 from pydantic_core import PydanticCustomError
@@ -30,11 +29,7 @@ class User(BaseModel, table=True):
 
     # TODO: Validate password with regex?
     email: EmailStr = Field(..., description="Email of the user", unique=True)
-    password: bytes = Field(..., description="Password of the user")
-    password_salt: bytes = Field(
-        default_factory=bcrypt.gensalt,
-        description="Password salt of the user",
-    )
+    password: str = Field(..., description="Password of the user")
     first_name: str = Field(
         ..., description="First name of the user", min_length=1, max_length=50
     )
@@ -58,9 +53,7 @@ class User(BaseModel, table=True):
         if not self.password:
             return self
 
-        self.password = hash_string_with_secret_key(
-            str(self.password), self.password_salt
-        )
+        self.password = hash_string_with_secret_key(self.password)
         return self
 
     @field_validator("email", mode="after")

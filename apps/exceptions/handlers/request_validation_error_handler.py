@@ -18,7 +18,7 @@ async def request_validation_error_handler(request: Request, exc: RequestValidat
     """
     errors = exc.errors()
 
-    request_json = await request.json()
+    request_json = await request.json() if await request.body() else None
     return JSONResponse(
         status_code=400,
         content=jsonable_encoder({"detail": errors, "body": request_json}),
