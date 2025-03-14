@@ -1,30 +1,48 @@
 from fastapi import HTTPException
 from fastapi_sqlalchemy import db
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
+from pydantic import (
+    BaseModel,
+    EmailStr,
+    Field,
+)
 
-from apps.authentication.methods.hash_util_methods import verify_strings
+from apps.authentication.methods.token_util_methods import (
+    create_access_token,
+    create_refresh_token,
+)
 from apps.users.models.user import User
+from apps.users.schemas.user_schemas import UserReadSchema
 
 
 class LoginSchema(BaseModel):
     """Login schema."""
 
     email: EmailStr = Field(..., description="Email of the user")
-    password: str = Field(..., description="Password of the user")
 
-    model_config = ConfigDict(from_attributes=True, extra="allow")
-
-    @model_validator(mode="after")
-    def validate_credentials(self):
+    def validate_credentials(self, password: str):
         """Validate email and password."""
         user = db.session.query(User).filter_by(email=self.email).first()
-        if not user or not verify_strings(user.password, self.password):
+        if not user or not user.validate_password(password):
             raise HTTPException(status_code=403, detail="Invalid credentials")
 
-        self.user = user
-        return self
+        return user
 
-    def login(self):
-        """Login user."""
-        # TODO: Implement login logic
-        return {"status": "ok"}
+    def create_access_token(self, user):
+        """Create access token."""
+        return create_access_token({"email": self.email}, user.id)
+
+    def create_refresh_token(self, user):
+        """Create refresh token."""
+        return create_refresh_token({"email": self.email}, user.id)
+
+    def login(self, password: str):
+        """Validate email and password."""
+        user = self.validate_credentials(password)
+        access_token = self.create_access_token(user)
+        refresh_token = self.create_refresh_token(user)
+        user_data = UserReadSchema.model_validate(user)
+        return {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "user": user_data,
+        }

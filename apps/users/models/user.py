@@ -16,7 +16,8 @@ from pydantic_core import PydanticCustomError
 from sqlmodel import Field, Relationship
 
 from apps.authentication.methods.hash_util_methods import (
-    hash_string_with_secret_key,
+    hash_string,
+    verify_strings,
 )
 from apps.common.models.base_model import BaseModel
 from apps.exceptions.constants.error_codes import ErrorCodes
@@ -45,7 +46,11 @@ class User(BaseModel, table=True):
     )
 
     def __str__(self):
-        return self.name
+        return f"{self.first_name} {self.last_name}"
+
+    def validate_password(self, password: str) -> bool:
+        """Validate password."""
+        return verify_strings(self.password, password)
 
     @model_validator(mode="after")
     def hash_password(self):
@@ -53,7 +58,7 @@ class User(BaseModel, table=True):
         if not self.password:
             return self
 
-        self.password = hash_string_with_secret_key(self.password)
+        self.password = hash_string(self.password)
         return self
 
     @field_validator("email", mode="after")

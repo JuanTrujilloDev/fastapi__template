@@ -66,6 +66,11 @@ class Settings(BaseSettings):
         r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
     )
 
+    # TOKENS
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30)
+    REFRESH_TOKEN_EXPIRE_DAYS: int = os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", 7)
+    TOKEN_ALGORITHM: str = os.getenv("TOKEN_ALGORITHM", "HS256")
+
 
 settings = Settings()
 

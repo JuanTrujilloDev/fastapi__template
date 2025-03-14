@@ -9,12 +9,11 @@ which is part of this source code package.
 from fastapi import FastAPI
 
 from apps.authentication.models.api_key import APIKey
-from apps.authentication.models.blacklisted_token import BlacklistedToken
 from apps.authentication.models.outstanding_token import OutstandingToken
 
 
 def register(app: FastAPI):
     """Register app instance."""
     # Include models
-    app.registered_models += [OutstandingToken, BlacklistedToken, APIKey]
+    app.registered_models += [OutstandingToken, APIKey]
     return app

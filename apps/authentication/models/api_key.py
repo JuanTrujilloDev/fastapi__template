@@ -14,7 +14,7 @@ from typing import Optional
 from pydantic import field_validator, model_validator
 from sqlmodel import Field
 
-from apps.authentication.methods.hash_util_methods import hash_string_with_secret_key
+from apps.authentication.methods.hash_util_methods import hash_string
 from apps.common.models.base_model import BaseModel
 
 
@@ -51,5 +51,5 @@ class APIKey(BaseModel, table=True):
     def generate_hash_key(self):
         """Generate short key"""
         self.short_key = self.key[:5]
-        self.key = hash_string_with_secret_key(self.key)
+        self.key = hash_string(self.key)
         return self

@@ -8,23 +8,22 @@ which is part of this source code package.
 from apps.authentication.constants.hash_constants import STRING_HASHER
 
 
-def hash_string_with_secret_key(string: str) -> str:
+def hash_string(string: str) -> str:
     """
-    First encrypt the password with Fernet, then hash with bcrypt.
+    Hash the string using the STRING_HASHER.
 
     Args:
-        string (str): String to encrypt and hash.
+        string (str): String to hash
 
     Returns:
         str: Hashed string ready for storage
     """
-    # TODO: Implement encryption logic
     return STRING_HASHER.hash(string)
 
 
 def verify_strings(stored_string: str, string: str) -> bool:
     """
-    Verify the password using the same encrypt-then-hash approach.
+    Verify the string using the STRING_HASHER.
 
     Args:
         stored_string (str): Stored hashed value
@@ -33,4 +32,4 @@ def verify_strings(stored_string: str, string: str) -> bool:
     Returns:
         bool: True if the password is correct
     """
-    return STRING_HASHER.verify(stored_string, string)
+    return STRING_HASHER.verify(string, stored_string)

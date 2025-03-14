@@ -9,7 +9,6 @@ which is part of this source code package.
 """
 
 from datetime import datetime
-from typing import List
 from uuid import UUID
 
 from fastapi_sqlalchemy import db
@@ -30,19 +29,18 @@ class OutstandingToken(BaseModel, table=True):
     token_type: TokenTypes = Field(..., description="Token type")
     expires_at: datetime = Field(..., description="Token expiry time")
     revoked: bool = Field(default=False, description="Is token revoked")
-    revoked_at: int = Field(default=None, description="Token revoked time")
 
     # relationship
     user_id: UUID = Field(foreign_key="users.id")
     user: User = Relationship(back_populates="outstanding_tokens")
-    blacklisted_token: List["BlacklistedToken"] = Relationship(
-        back_populates="outstanding_token"
-    )
+
+    def is_valid(self) -> bool:
+        """Check if the token is valid."""
+        return not self.revoked and self.expires_at > datetime.now() and self.is_active
 
     def revoke(self) -> None:
         """Revoke the token."""
         self.revoked = True
-        self.revoked_at = datetime.now().timestamp()
 
     @field_validator("expires_at", mode="after")
     @classmethod
