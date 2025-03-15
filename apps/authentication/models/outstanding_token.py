@@ -31,7 +31,7 @@ class OutstandingToken(BaseModel, table=True):
     revoked: bool = Field(default=False, description="Is token revoked")
 
     # relationship
-    user_id: UUID = Field(foreign_key="users.id")
+    user_id: UUID = Field(foreign_key="users.id", ondelete="CASCADE")
     user: User = Relationship(back_populates="outstanding_tokens")
 
     def is_valid(self) -> bool:
