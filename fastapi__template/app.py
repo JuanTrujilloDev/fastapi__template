@@ -9,6 +9,7 @@ which is part of this source code package.
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi_pagination import add_pagination
 from fastapi_sqlalchemy import DBSessionMiddleware
 from pydantic import ValidationError
 from sqlmodel import StaticPool, create_engine
@@ -42,6 +43,9 @@ def __create_app() -> FastAPI:
     fastapi_app.config = settings
     fastapi_app.registered_models = []
     fastapi_app.routers = []
+
+    # Pagination support
+    add_pagination(fastapi_app)
 
     # Add middlewares
     fastapi_app.add_middleware(DBSessionMiddleware, db_url=settings.DATABASE_URL)
