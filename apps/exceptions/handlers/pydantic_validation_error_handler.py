@@ -11,12 +11,11 @@ from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
 
-async def pydantic_validation_error_handler(request: Request, exc: ValidationError):
+async def pydantic_validation_error_handler(_: Request, exc: ValidationError):
     """
     Pydantic validation error handler.
     """
-    request_json = await request.json() if await request.body() else None
     return JSONResponse(
         status_code=400,
-        content=jsonable_encoder({"detail": exc.errors(), "body": request_json}),
+        content=jsonable_encoder({"detail": exc.errors()}),
     )

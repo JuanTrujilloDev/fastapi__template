@@ -18,4 +18,7 @@ class TokenTypes(StrEnum):
     REFRESH = "refresh"
 
 
-OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl="/login/")
+OAUTH2_SCHEME = OAuth2PasswordBearer(
+    tokenUrl="/authentication/login/",
+    scheme_name="JWT",
+)

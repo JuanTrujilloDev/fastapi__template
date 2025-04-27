@@ -18,12 +18,13 @@ class RefreshTokenSchema(BaseModel):
         """Refresh access token."""
         token = self.validate_refresh_token_is_valid()
         db.session.query(OutstandingToken).filter_by(
-            user_id=token.user_id, token_type=TokenTypes.ACCESS
+            user_id=token.user_id, token_type=TokenTypes.ACCESS, client=token.client
         ).update({OutstandingToken.revoked: True})
         db.session.commit()
         access_token = create_access_token(
             {"email": token.user.email},
             token.user_id,
+            token.client,
         )
         return access_token
 

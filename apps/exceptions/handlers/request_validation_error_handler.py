@@ -12,14 +12,12 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 
-async def request_validation_error_handler(request: Request, exc: RequestValidationError):
+async def request_validation_error_handler(_: Request, exc: RequestValidationError):
     """
     Request validation error handler.
     """
     errors = exc.errors()
-
-    request_json = await request.json() if await request.body() else None
     return JSONResponse(
         status_code=400,
-        content=jsonable_encoder({"detail": errors, "body": request_json}),
+        content=jsonable_encoder({"detail": errors}),
     )

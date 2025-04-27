@@ -8,6 +8,7 @@ This file is subject to the terms and conditions defined in file 'LICENSE',
 which is part of this source code package.
 """
 
+import re
 from typing import List
 
 from fastapi_sqlalchemy import db
@@ -21,6 +22,7 @@ from apps.authentication.methods.hash_util_methods import (
 )
 from apps.common.models.base_model import BaseModel
 from apps.exceptions.constants.error_codes import ErrorCodes
+from fastapi__template.settings import settings
 
 
 class User(BaseModel, table=True):
@@ -28,9 +30,11 @@ class User(BaseModel, table=True):
 
     __tablename__ = "users"
 
-    # TODO: Validate password with regex?
     email: EmailStr = Field(..., description="Email of the user", unique=True)
-    password: str = Field(..., description="Password of the user")
+    password: str = Field(
+        ...,
+        description="Password of the user",
+    )
     first_name: str = Field(
         ..., description="First name of the user", min_length=1, max_length=50
     )
@@ -77,6 +81,23 @@ class User(BaseModel, table=True):
             raise PydanticCustomError(
                 ErrorCodes.DUPLICATE_DATA,
                 f"Email {value} already exists",
+            )
+
+        return value
+
+    @field_validator("password", mode="before")
+    @classmethod
+    def validate_password_regex(cls, value: str):
+        """Validate password."""
+        if not isinstance(value, str):
+            return value
+
+        if not re.match(settings.PASSWORD_REGEX, value):
+            raise PydanticCustomError(
+                ErrorCodes.INVALID_DATA,
+                "Password must be between 8 and 16 characters long,"
+                " contain at least one uppercase letter, one lowercase letter, "
+                "one number, and one special character.",
             )
 
         return value

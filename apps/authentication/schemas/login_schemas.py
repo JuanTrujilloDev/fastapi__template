@@ -27,19 +27,27 @@ class LoginSchema(BaseModel):
 
         return user
 
-    def create_access_token(self, user):
+    def create_access_token(self, user: User, client: str):
         """Create access token."""
-        return create_access_token({"email": self.email}, user.id)
+        return create_access_token(
+            data={"sub": str(user.id), "email": user.email},
+            user_id=user.id,
+            client=client,
+        )
 
-    def create_refresh_token(self, user):
+    def create_refresh_token(self, user: User, client: str):
         """Create refresh token."""
-        return create_refresh_token({"email": self.email}, user.id)
+        return create_refresh_token(
+            data={"sub": str(user.id), "email": user.email},
+            user_id=user.id,
+            client=client,
+        )
 
-    def login(self, password: str):
+    def login(self, password: str, client: str):
         """Validate email and password."""
         user = self.validate_credentials(password)
-        access_token = self.create_access_token(user)
-        refresh_token = self.create_refresh_token(user)
+        access_token = self.create_access_token(user, client)
+        refresh_token = self.create_refresh_token(user, client)
         user_data = UserReadSchema.model_validate(user)
         return {
             "access_token": access_token,

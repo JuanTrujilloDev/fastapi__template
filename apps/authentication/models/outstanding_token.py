@@ -8,7 +8,7 @@ This file is subject to the terms and conditions defined in file 'LICENSE',
 which is part of this source code package.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import UUID
 
 from fastapi_sqlalchemy import db
@@ -26,6 +26,7 @@ class OutstandingToken(BaseModel, table=True):
     __tablename__ = "outstanding_tokens"
 
     jti: str = Field(..., unique=True, description="JWT ID")
+    client: str = Field(..., description="Client ID")
     token_type: TokenTypes = Field(..., description="Token type")
     expires_at: datetime = Field(..., description="Token expiry time")
     revoked: bool = Field(default=False, description="Is token revoked")
@@ -34,9 +35,14 @@ class OutstandingToken(BaseModel, table=True):
     user_id: UUID = Field(foreign_key="users.id", ondelete="CASCADE")
     user: User = Relationship(back_populates="outstanding_tokens")
 
+    @property
     def is_valid(self) -> bool:
         """Check if the token is valid."""
-        return not self.revoked and self.expires_at > datetime.now() and self.is_active
+        return (
+            not self.revoked
+            and self.expires_at > datetime.now(tz=timezone.utc)
+            and self.is_active
+        )
 
     def revoke(self) -> None:
         """Revoke the token."""
@@ -46,7 +52,7 @@ class OutstandingToken(BaseModel, table=True):
     @classmethod
     def validate_expires_at(cls, expires_at: datetime) -> datetime:
         """Validate expires_at."""
-        if expires_at < datetime.now():
+        if expires_at < datetime.now(tz=timezone.utc):
             raise ValueError("Expiry date should be greater than today.")
         return expires_at
 

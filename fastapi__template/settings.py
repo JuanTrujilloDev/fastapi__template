@@ -63,7 +63,7 @@ class Settings(BaseSettings):
     ALLOW_CREDENTIALS: bool = os.getenv("ALLOW_CREDENTIALS", True)
     PASSWORD_REGEX: str = os.getenv(
         "PASSWORD_REGEX",
-        r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
+        r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])\S{8,16}$",
     )
 
     # TOKENS

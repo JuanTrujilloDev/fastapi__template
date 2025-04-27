@@ -57,8 +57,6 @@ def __create_app() -> FastAPI:
     fastapi_app.default_engine = create_engine(
         settings.DATABASE_URL, poolclass=StaticPool
     )
-
-    # TODO: Add custom exception handlers
     fastapi_app.exception_handlers = {
         RequestValidationError: request_validation_error_handler,
         ValidationError: pydantic_validation_error_handler,
